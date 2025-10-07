@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard — Orderly</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}" />
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" height="40" width="40">
+            <span>Orderly</span>
+        </div>
+        <nav>
+            <a href="#">Employees</a>
+            <a href="#">Products</a>
+            <a href="#">Orders</a>
+            <a href="/logout" class="btn logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <h1>Welcome, Admin!</h1>
+        <section class="cards">
+            <div class="card">
+                <h2>Employees</h2>
+                <p>Manage all employees here</p>
+                <button class="btn">Add Employee</button>
+            </div>
+            <div class="card">
+                <h2>Products</h2>
+                <p>Manage all products here</p>
+                <button class="btn">Add Product</button>
+            </div>
+            <div class="card">
+                <h2>Orders</h2>
+                <p>View all purchase requests</p>
+                <button class="btn">View Orders</button>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
