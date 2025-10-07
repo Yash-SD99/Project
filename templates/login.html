@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Purchase Order Management — Sign In</title>
+    <link rel="stylesheet" href="../static/login.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <main class="page">
+        <div class="card shadow">
+            <header class="card-header">
+                <div class="badge">
+                    <img src="../static/images/logo.png" height="54" width="54" border-radius="12px" />
+                </div>
+                <h1 class="title">Orderly</h1>
+                <p class="description">Sign in to your account to continue</p>
+            </header>
+
+            <section class="card-content">
+                <form class="form" action="/login" method="post">
+                    <div class="field">
+                        <label class="label" for="email">Email</label>
+                        <input id="email" name="email" class="input" type="email" placeholder="admin@poms.com" required />
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="password">Password</label>
+                        <input id="password" name="password" class="input" type="password" placeholder="••••••••" required />
+                    </div>
+
+                    <button class="btn primary" type="submit">Sign In</button>
+                </form>
+
+                <div class="demo">
+                    <p class="demo-title">Demo Credentials:</p>
+                    <p class="demo-line">Admin: <a href="mailto:admin@poms.com">admin@poms.com</a> / admin123</p>
+                    <p class="demo-line">Employee: <a href="mailto:employee@poms.com">employee@poms.com</a> / emp123</p>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>
