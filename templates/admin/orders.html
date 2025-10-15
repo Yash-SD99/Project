@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>POMS — Manage Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="adminOrdersBody">
+    <!-- Top Nav -->
+    <header class="adminNavBar">
+        <div class="adminNavInner">
+            <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
+                <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}"
+                    alt="Orderly logo">
+                <span class="adminNavBrandText">Orderly</span>
+            </a>
+
+            <nav class="adminNavLinks">
+                <a class="adminNavLink" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_orders') }}">Manage Orders</a>
+                <a class="adminNavLink" href="{{ url_for('admin_suppliers') }}">Suppliers</a>
+                <a class="adminNavLink" href="{{ url_for('admin_employee') }}">Employees</a>
+                <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
+            </nav>
+
+            <div class="adminNavRight">
+                <span class="adminNavUser">Admin User</span>
+                <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- Page -->
+    <main class="adminOrdersPage">
+        <h1 class="adminOrdersTitle">Manage Orders</h1>
+
+        <section class="adminOrdersPanel">
+            <div class="adminOrdersPanelHead">
+                <h2 class="adminOrdersPanelTitle">All Purchase Orders</h2>
+            </div>
+
+            <div class="adminOrdersTableWrap">
+                <table class="adminOrdersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Supplier</th>
+                            <th>Employee</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th class="adminOrdersTextRight">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PO-001</td>
+                            <td>Acme Corp</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td><span class="adminOrdersBadge adminOrdersBadgeGreen">Approved</span></td>
+                            <td class="adminOrdersTextRight">
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnGray" title="View">🛈</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PO-002</td>
+                            <td>Global Supplies Inc</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-18</td>
+                            <td><span class="adminOrdersBadge adminOrdersBadgeAmber">Pending</span></td>
+                            <td class="adminOrdersTextRight">
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnGreen" title="Approve">✓</button>
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnRed" title="Reject">✕</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PO-003</td>
+                            <td>Premier Distributors</td>
+                            <td>Mike Johnson</td>
+                            <td>2025-01-20</td>
+                            <td><span class="adminOrdersBadge adminOrdersBadgeGreen">Approved</span></td>
+                            <td class="adminOrdersTextRight">
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnGray" title="View">🛈</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PO-004</td>
+                            <td>Tech Solutions Ltd</td>
+                            <td>Sarah Williams</td>
+                            <td>2025-01-22</td>
+                            <td><span class="adminOrdersBadge adminOrdersBadgeAmber">Pending</span></td>
+                            <td class="adminOrdersTextRight">
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnGreen" title="Approve">✓</button>
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnRed" title="Reject">✕</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PO-005</td>
+                            <td>Acme Corp</td>
+                            <td>John Doe</td>
+                            <td>2025-01-25</td>
+                            <td><span class="adminOrdersBadge adminOrdersBadgeRed">Rejected</span></td>
+                            <td class="adminOrdersTextRight">
+                                <button class="adminOrdersIconBtn adminOrdersIconBtnGray" title="View">🛈</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

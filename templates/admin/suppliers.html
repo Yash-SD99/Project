@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orderly — Suppliers</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Shared navbar -->
+  <header class="adminNavBar">
+    <div class="adminNavInner">
+      <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
+        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="adminNavBrandText">Orderly</span>
+      </a>
+      <nav class="adminNavLinks">
+        <a class="adminNavLink" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="adminNavLink" href="{{ url_for('admin_orders') }}">Manage Orders</a>
+        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_suppliers') }}">Suppliers</a>
+        <a class="adminNavLink" href="{{ url_for('admin_employee') }}">Employees</a>
+        <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
+      </nav>
+      <div class="adminNavRight">
+        <span class="adminNavUser">Admin User</span>
+        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page content -->
+  <main class="adminSuppliersPage">
+    <div class="adminSuppliersHeader">
+      <h1 class="adminSuppliersTitle">Suppliers</h1>
+      <a href="#" class="adminSuppliersAddBtn"><span class="adminSuppliersAddIcon">＋</span> Add Supplier</a>
+    </div>
+
+    <section class="adminSuppliersPanel">
+      <div class="adminSuppliersPanelHead">
+        <h2 class="adminSuppliersPanelTitle">Supplier List</h2>
+      </div>
+
+      <div class="adminSuppliersTableWrap">
+        <table class="adminSuppliersTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Contact</th>
+              <th>Address</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Acme Corp</td>
+              <td>+1 234-567-8901</td>
+              <td>123 Business St, NY</td>
+            </tr>
+            <tr>
+              <td>Global Supplies Inc</td>
+              <td>+1 234-567-8902</td>
+              <td>456 Commerce Ave, CA</td>
+            </tr>
+            <tr>
+              <td>Premier Distributors</td>
+              <td>+1 234-567-8903</td>
+              <td>789 Trade Blvd, TX</td>
+            </tr>
+            <tr>
+              <td>Tech Solutions Ltd</td>
+              <td>+1 234-567-8904</td>
+              <td>321 Innovation Dr, WA</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

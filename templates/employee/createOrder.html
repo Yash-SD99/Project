@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orderly — Create Purchase Order</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='employee.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Shared Employee Navbar -->
+  <header class="EmployeeNavBar">
+    <div class="EmployeeNavInner">
+      <a class="EmployeeNavBrand" href="{{ url_for('employee_dashboard') }}">
+        <img class="EmployeeNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="EmployeeNavBrandText">Orderly</span>
+      </a>
+      <nav class="EmployeeNavLinks">
+        <a class="EmployeeNavLink" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+        <a class="EmployeeNavLink EmployeeNavLinkActive" href="{{ url_for('employee_createorders') }}">Create Purchase Order</a>
+        <a class="EmployeeNavLink" href="{{ url_for('employee_myorders') }}">My Orders</a>
+      </nav>
+      <div class="EmployeeNavRight">
+        <span class="EmployeeNavUser">John Employee</span>
+        <a class="EmployeeNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <main class="EmployeeCreateOrderPage">
+    <h1 class="EmployeeCreateOrderTitle">Create Purchase Order</h1>
+
+    <section class="EmployeeCreateOrderPanel">
+      <div class="EmployeeCreateOrderPanelHead">
+        <h2 class="EmployeeCreateOrderPanelTitle">New Purchase Order</h2>
+      </div>
+
+      <form class="EmployeeCreateOrderForm" action="#" method="post">
+        <!-- Supplier -->
+        <div class="EmployeeCreateOrderField">
+          <label class="EmployeeCreateOrderLabel" for="supplier">Supplier</label>
+          <div class="EmployeeCreateOrderSelectWrap">
+            <select id="supplier" name="supplier" class="EmployeeCreateOrderSelect" required>
+              <option value="" selected disabled>Select a supplier</option>
+              <option>Acme Corp</option>
+              <option>Global Supplies Inc</option>
+              <option>Premier Distributors</option>
+              <option>Tech Solutions Ltd</option>
+            </select>
+            <span class="EmployeeCreateOrderSelectIcon">▾</span>
+          </div>
+        </div>
+
+        <!-- Product name -->
+        <div class="EmployeeCreateOrderField">
+          <label class="EmployeeCreateOrderLabel" for="product">Product Name</label>
+          <input id="product" name="product" type="text" class="EmployeeCreateOrderInput" placeholder="" required>
+        </div>
+
+        <!-- Quantity / Price -->
+        <div class="EmployeeCreateOrderGrid">
+          <div class="EmployeeCreateOrderField">
+            <label class="EmployeeCreateOrderLabel" for="qty">Quantity</label>
+            <input id="qty" name="qty" type="number" min="1" class="EmployeeCreateOrderInput" placeholder="">
+          </div>
+          <div class="EmployeeCreateOrderField">
+            <label class="EmployeeCreateOrderLabel" for="price">Price per Unit ($)</label>
+            <input id="price" name="price" type="number" step="0.01" min="0" class="EmployeeCreateOrderInput" placeholder="">
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="EmployeeCreateOrderTotal">
+          <span class="EmployeeCreateOrderTotalLabel">Total:</span>
+          <span class="EmployeeCreateOrderTotalValue">$0.00</span>
+        </div>
+
+        <button type="submit" class="EmployeeCreateOrderSubmit">Submit Purchase Order</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

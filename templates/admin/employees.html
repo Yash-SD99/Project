@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orderly — Employees</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Shared navbar -->
+  <header class="adminNavBar">
+    <div class="adminNavInner">
+      <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
+        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="adminNavBrandText">Orderly</span>
+      </a>
+      <nav class="adminNavLinks">
+        <a class="adminNavLink" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="adminNavLink" href="{{ url_for('admin_orders') }}">Manage Orders</a>
+        <a class="adminNavLink" href="{{ url_for('admin_suppliers') }}">Suppliers</a>
+        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_employee') }}">Employees</a>
+        <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
+      </nav>
+      <div class="adminNavRight">
+        <span class="adminNavUser">Admin User</span>
+        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page content -->
+  <main class="adminEmployeesPage">
+    <div class="adminEmployeesHeader">
+      <h1 class="adminEmployeesTitle">Employees</h1>
+      <a href="#" class="adminEmployeesAddBtn"><span class="adminEmployeesAddIcon">＋</span> Add Employee</a>
+    </div>
+
+    <section class="adminEmployeesPanel">
+      <div class="adminEmployeesPanelHead">
+        <h2 class="adminEmployeesPanelTitle">Employee List</h2>
+      </div>
+
+      <div class="adminEmployeesTableWrap">
+        <table class="adminEmployeesTable">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th class="adminEmployeesTextRight">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>EMP001</td>
+              <td>John Doe</td>
+              <td>john@poms.com</td>
+              <td>Employee</td>
+              <td class="adminEmployeesTextRight">
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
+              </td>
+            </tr>
+            <tr>
+              <td>EMP002</td>
+              <td>Jane Smith</td>
+              <td>jane@poms.com</td>
+              <td>Employee</td>
+              <td class="adminEmployeesTextRight">
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
+              </td>
+            </tr>
+            <tr>
+              <td>EMP003</td>
+              <td>Mike Johnson</td>
+              <td>mike@poms.com</td>
+              <td>Admin</td>
+              <td class="adminEmployeesTextRight">
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
+              </td>
+            </tr>
+            <tr>
+              <td>EMP004</td>
+              <td>Sarah Williams</td>
+              <td>sarah@poms.com</td>
+              <td>Employee</td>
+              <td class="adminEmployeesTextRight">
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
