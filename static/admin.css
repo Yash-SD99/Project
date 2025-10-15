@@ -1,0 +1,733 @@
+/* =========================================================
+   Common Admin Styles + Navbar (adminNav*)
+   File: static/admin.css
+   ========================================================= */
+
+:root {
+    /* Palette */
+    --adminBg: #f7f8fb;
+    --adminPanel: #ffffff;
+    --adminText: #0f172a;
+    --adminMuted: #667085;
+    --adminBorder: #e6e9ef;
+    --adminPrimary: #3b82f6;
+    --adminPrimarySoft: #e6efff;
+    --adminGreen: #22c55e;
+    --adminGreenSoft: #e7f8ee;
+    --adminAmber: #f59e0b;
+    --adminAmberSoft: #fff3d9;
+    --adminRed: #ef4444;
+    --adminRedSoft: #ffe4e6;
+
+    /* Navbar vars */
+    --adminNavBorder: var(--adminBorder);
+    --adminNavBg: #ffffffcc;
+    --adminNavLink: #374151;
+    --adminNavLinkHover: #f1f5f9;
+    --adminNavPrimary: var(--adminPrimary);
+
+    /* Misc */
+    --adminRadius: 12px;
+    --adminShadow: 0 10px 30px rgba(16, 24, 40, .06), 0 2px 8px rgba(16, 24, 40, .05);
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: var(--adminText);
+    background: var(--adminBg);
+}
+
+/* ===== Common Admin Navbar (adminNav*) — with logo ===== */
+:root {
+    --adminNavBorder: #e6e9ef;
+    --adminNavBg: #ffffffcc;
+    --adminNavLink: #374151;
+    --adminNavLinkHover: #f1f5f9;
+    --adminNavPrimary: #3b82f6;
+}
+
+.adminNavBar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--adminNavBg);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--adminNavBorder);
+}
+
+.adminNavInner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.adminNavBrand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.adminNavBrandLogo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #e6efff;
+    border: 1px solid #d7e5ff;
+    display: block;
+}
+
+.adminNavBrandText {
+    font-weight: 700;
+    letter-spacing: .2px;
+}
+
+.adminNavLinks {
+    display: flex;
+    gap: 8px
+}
+
+.adminNavLink {
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--adminNavLink);
+    font-weight: 600;
+}
+
+.adminNavLink:hover {
+    background: var(--adminNavLinkHover)
+}
+
+.adminNavLinkActive {
+    background: var(--adminNavPrimary);
+    color: #fff
+}
+
+.adminNavRight {
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+.adminNavUser {
+    font-size: 14px;
+    color: #475569
+}
+
+.adminNavBtn {
+    border: 1px solid var(--adminNavBorder);
+    background: #fff;
+    color: #0f172a;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.adminNavBtn:hover {
+    background: #f8fafc
+}
+
+/* =========================================================
+   Admin Dashboard content (adminDashboard*)
+   ========================================================= */
+
+/* body already styled globally */
+.adminDashboardPage {
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 0 16px
+}
+
+.adminDashboardTitle {
+    margin: 10px 0 18px 0;
+    font-size: 28px
+}
+
+/* Cards Row */
+.adminDashboardCardsRow {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+}
+
+@media (max-width: 1100px) {
+    .adminDashboardCardsRow {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .adminDashboardCardsRow {
+        grid-template-columns: 1fr;
+    }
+}
+
+.adminDashboardCard {
+    background: var(--adminPanel);
+    border: 1px solid var(--adminBorder);
+    border-radius: var(--adminRadius);
+    box-shadow: var(--adminShadow);
+    padding: 18px;
+}
+
+.adminDashboardCardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.adminDashboardCardTitle {
+    margin: 0;
+    font-size: 14px;
+    color: var(--adminMuted);
+    font-weight: 600
+}
+
+.adminDashboardCardBadge {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    border: 1px solid transparent;
+}
+
+.adminDashboardBadgeBlue {
+    background: var(--adminPrimarySoft);
+    color: var(--adminPrimary);
+    border-color: #dbe8ff
+}
+
+.adminDashboardBadgeGreen {
+    background: var(--adminGreenSoft);
+    color: var(--adminGreen);
+    border-color: #d7f2e2
+}
+
+.adminDashboardBadgeAmber {
+    background: var(--adminAmberSoft);
+    color: #b7791f;
+    border-color: #ffe7b6
+}
+
+.adminDashboardBadgeRed {
+    background: var(--adminRedSoft);
+    color: var(--adminRed);
+    border-color: #ffc7ce
+}
+
+.adminDashboardCardValue {
+    margin-top: 12px;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: .3px
+}
+
+/* =========================================================
+   Manage Orders page (adminOrders*)
+   ========================================================= */
+
+/* inherits global body */
+.adminOrdersPage {
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 0 16px
+}
+
+.adminOrdersTitle {
+    margin: 10px 0 18px 0;
+    font-size: 28px
+}
+
+/* Panel */
+.adminOrdersPanel {
+    background: #fff;
+    border: 1px solid var(--adminBorder);
+    border-radius: var(--adminRadius);
+    box-shadow: var(--adminShadow);
+}
+
+.adminOrdersPanelHead {
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef1f5
+}
+
+.adminOrdersPanelTitle {
+    margin: 0;
+    font-size: 18px
+}
+
+/* Table */
+.adminOrdersTableWrap {
+    overflow: auto
+}
+
+.adminOrdersTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+.adminOrdersTable thead th {
+    text-align: left;
+    font-weight: 700;
+    color: #475569;
+    padding: 14px 18px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 1px solid #eef1f5;
+}
+
+.adminOrdersTable tbody td {
+    padding: 16px 18px;
+    border-top: 1px solid #f0f2f6;
+    background: #fff;
+}
+
+.adminOrdersTable tbody tr:nth-child(odd) td {
+    background: #fbfcff
+}
+
+.adminOrdersTextRight {
+    text-align: right
+}
+
+/* Status badges */
+.adminOrdersBadge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+    border: 1px solid transparent;
+}
+
+.adminOrdersBadgeGreen {
+    background: var(--adminGreenSoft);
+    color: var(--adminGreen);
+    border-color: #d7f2e2
+}
+
+.adminOrdersBadgeAmber {
+    background: var(--adminAmberSoft);
+    color: #b7791f;
+    border-color: #ffe7b6
+}
+
+.adminOrdersBadgeRed {
+    background: var(--adminRedSoft);
+    color: var(--adminRed);
+    border-color: #ffc7ce
+}
+
+/* Action buttons */
+.adminOrdersIconBtn {
+    border: 1px solid var(--adminBorder);
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.adminOrdersIconBtn:hover {
+    background: #f8fafc
+}
+
+.adminOrdersIconBtnGreen {
+    background: var(--adminGreen);
+    color: #fff;
+    border-color: #18a94c
+}
+
+.adminOrdersIconBtnGreen:hover {
+    background: #1fb157
+}
+
+.adminOrdersIconBtnRed {
+    background: var(--adminRed);
+    color: #fff;
+    border-color: #d63a3a
+}
+
+.adminOrdersIconBtnRed:hover {
+    background: #dc3a3a
+}
+
+.adminOrdersIconBtnGray {
+    background: #eef2f7;
+    color: #334155;
+    border-color: #e2e6ee
+}
+
+.adminOrdersIconBtnGray:hover {
+    background: #e7ecf5
+}
+
+/* ===== Suppliers page (adminSuppliers*) ===== */
+.adminSuppliersPage {
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 0 16px
+}
+
+.adminSuppliersHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 8px 0 18px 0;
+}
+
+.adminSuppliersTitle {
+    margin: 0;
+    font-size: 28px
+}
+
+.adminSuppliersAddBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #3b82f6;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #306fe0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.adminSuppliersAddBtn:hover {
+    background: #2f6fe5
+}
+
+.adminSuppliersAddIcon {
+    font-weight: 900;
+    line-height: 1
+}
+
+.adminSuppliersPanel {
+    background: #fff;
+    border: 1px solid var(--adminBorder);
+    border-radius: 12px;
+    box-shadow: var(--adminShadow);
+}
+
+.adminSuppliersPanelHead {
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef1f5
+}
+
+.adminSuppliersPanelTitle {
+    margin: 0;
+    font-size: 18px
+}
+
+.adminSuppliersTableWrap {
+    overflow: auto
+}
+
+.adminSuppliersTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+.adminSuppliersTable thead th {
+    text-align: left;
+    font-weight: 700;
+    color: #475569;
+    padding: 14px 18px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 1px solid #eef1f5;
+}
+
+.adminSuppliersTable tbody td {
+    padding: 16px 18px;
+    border-top: 1px solid #f0f2f6;
+    background: #fff;
+}
+
+.adminSuppliersTable tbody tr:nth-child(odd) td {
+    background: #fbfcff
+}
+
+/* ===== Employees page (adminEmployees*) ===== */
+.adminEmployeesPage {
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 0 16px
+}
+
+.adminEmployeesHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 8px 0 18px 0;
+}
+
+.adminEmployeesTitle {
+    margin: 0;
+    font-size: 28px
+}
+
+.adminEmployeesAddBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #3b82f6;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #306fe0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.adminEmployeesAddBtn:hover {
+    background: #2f6fe5
+}
+
+.adminEmployeesAddIcon {
+    font-weight: 900;
+    line-height: 1
+}
+
+.adminEmployeesPanel {
+    background: #fff;
+    border: 1px solid var(--adminBorder);
+    border-radius: 12px;
+    box-shadow: var(--adminShadow);
+}
+
+.adminEmployeesPanelHead {
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef1f5
+}
+
+.adminEmployeesPanelTitle {
+    margin: 0;
+    font-size: 18px
+}
+
+.adminEmployeesTableWrap {
+    overflow: auto
+}
+
+.adminEmployeesTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+.adminEmployeesTable thead th {
+    text-align: left;
+    font-weight: 700;
+    color: #475569;
+    padding: 14px 18px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 1px solid #eef1f5;
+}
+
+.adminEmployeesTable tbody td {
+    padding: 16px 18px;
+    border-top: 1px solid #f0f2f6;
+    background: #fff;
+}
+
+.adminEmployeesTable tbody tr:nth-child(odd) td {
+    background: #fbfcff
+}
+
+.adminEmployeesTextRight {
+    text-align: right
+}
+
+/* Action buttons */
+.adminEmployeesIconBtn {
+    border: 1px solid var(--adminBorder);
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.adminEmployeesIconBtn:hover {
+    background: #f8fafc
+}
+
+.adminEmployeesIconBtnRed {
+    background: #ef4444;
+    color: #fff;
+    border-color: #d63a3a
+}
+
+.adminEmployeesIconBtnRed:hover {
+    background: #dc3a3a
+}
+
+.adminEmployeesIconBtnGray {
+    background: #eef2f7;
+    color: #334155;
+    border-color: #e2e6ee
+}
+
+.adminEmployeesIconBtnGray:hover {
+    background: #e7ecf5
+}
+
+/* ===== Reports page (adminReports*) ===== */
+.adminReportsPage {
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 0 16px
+}
+
+.adminReportsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 8px 0 18px 0;
+}
+
+.adminReportsTitle {
+    margin: 0;
+    font-size: 28px
+}
+
+.adminReportsDownloadBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #3b82f6;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #306fe0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.adminReportsDownloadBtn:hover {
+    background: #2f6fe5
+}
+
+.adminReportsDownloadIcon {
+    font-weight: 900;
+    line-height: 1
+}
+
+.adminReportsPanel {
+    background: #fff;
+    border: 1px solid var(--adminBorder);
+    border-radius: 12px;
+    box-shadow: var(--adminShadow);
+}
+
+.adminReportsPanelHead {
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef1f5
+}
+
+.adminReportsPanelTitle {
+    margin: 0;
+    font-size: 18px
+}
+
+.adminReportsTableWrap {
+    overflow: auto
+}
+
+.adminReportsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+.adminReportsTable thead th {
+    text-align: left;
+    font-weight: 700;
+    color: #475569;
+    padding: 14px 18px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 1px solid #eef1f5;
+}
+
+.adminReportsTable tbody td {
+    padding: 16px 18px;
+    border-top: 1px solid #f0f2f6;
+    background: #fff;
+}
+
+.adminReportsTable tbody tr:nth-child(odd) td {
+    background: #fbfcff
+}
+
+/* Status badges */
+.adminReportsBadge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+    border: 1px solid transparent;
+}
+
+.adminReportsBadgeGreen {
+    background: #e7f8ee;
+    color: #22c55e;
+    border-color: #d7f2e2
+}
+
+.adminReportsBadgeAmber {
+    background: #fff3d9;
+    color: #b7791f;
+    border-color: #ffe7b6
+}
+
+.adminReportsBadgeRed {
+    background: #ffe4e6;
+    color: #ef4444;
+    border-color: #ffc7ce
+}

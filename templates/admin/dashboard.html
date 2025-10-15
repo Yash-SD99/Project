@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>POMS — Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="adminDashboardBody">
+  <!-- Top Nav -->
+
+  <header class="adminNavBar">
+    <div class="adminNavInner">
+      <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
+        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="adminNavBrandText">Orderly</span>
+      </a>
+
+      <nav class="adminNavLinks">
+        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="adminNavLink" href="{{ url_for('admin_orders') }}">Manage Orders</a>
+        <a class="adminNavLink" href="{{ url_for('admin_suppliers') }}">Suppliers</a>
+        <a class="adminNavLink" href="{{ url_for('admin_employee') }}">Employees</a>
+        <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
+      </nav>
+
+      <div class="adminNavRight">
+        <span class="adminNavUser">Admin User</span>
+        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- Page -->
+  <main class="adminDashboardPage">
+    <h1 class="adminDashboardTitle">Admin Dashboard</h1>
+
+    <section class="adminDashboardCardsRow">
+      <article class="adminDashboardCard">
+        <div class="adminDashboardCardHeader">
+          <h2 class="adminDashboardCardTitle">Total Orders</h2>
+          <span class="adminDashboardCardBadge adminDashboardBadgeBlue" aria-hidden="true">🧾</span>
+        </div>
+        <div class="adminDashboardCardValue">156</div>
+      </article>
+
+      <article class="adminDashboardCard">
+        <div class="adminDashboardCardHeader">
+          <h2 class="adminDashboardCardTitle">Pending Approvals</h2>
+          <span class="adminDashboardCardBadge adminDashboardBadgeAmber" aria-hidden="true">🕒</span>
+        </div>
+        <div class="adminDashboardCardValue">23</div>
+      </article>
+
+      <article class="adminDashboardCard">
+        <div class="adminDashboardCardHeader">
+          <h2 class="adminDashboardCardTitle">Approved Orders</h2>
+          <span class="adminDashboardCardBadge adminDashboardBadgeGreen" aria-hidden="true">✅</span>
+        </div>
+        <div class="adminDashboardCardValue">118</div>
+      </article>
+
+      <article class="adminDashboardCard">
+        <div class="adminDashboardCardHeader">
+          <h2 class="adminDashboardCardTitle">Rejected Orders</h2>
+          <span class="adminDashboardCardBadge adminDashboardBadgeRed" aria-hidden="true">✖</span>
+        </div>
+        <div class="adminDashboardCardValue">15</div>
+      </article>
+    </section>
+  </main>
+</body>
+
+</html>

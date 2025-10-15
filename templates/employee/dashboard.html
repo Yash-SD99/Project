@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orderly — Employee Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='employee.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Shared Employee Navbar -->
+  <header class="EmployeeNavBar">
+    <div class="EmployeeNavInner">
+      <a class="EmployeeNavBrand" href="{{ url_for('employee_dashboard') }}">
+        <img class="EmployeeNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="EmployeeNavBrandText">Orderly</span>
+      </a>
+      <nav class="EmployeeNavLinks">
+        <a class="EmployeeNavLink EmployeeNavLinkActive" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+        <a class="EmployeeNavLink" href="{{ url_for('employee_createorders') }}">Create Purchase Order</a>
+        <a class="EmployeeNavLink" href="{{ url_for('employee_myorders') }}">My Orders</a>
+      </nav>
+      <div class="EmployeeNavRight">
+        <span class="EmployeeNavUser">John Employee</span>
+        <a class="EmployeeNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page -->
+  <main class="EmployeeDashboardPage">
+    <h1 class="EmployeeDashboardTitle">Dashboard</h1>
+
+    <section class="EmployeeDashboardCardsRow">
+      <article class="EmployeeDashboardCard">
+        <div class="EmployeeDashboardCardHeader">
+          <h2 class="EmployeeDashboardCardTitle">Total Orders</h2>
+          <span class="EmployeeDashboardCardBadge EmployeeDashboardBadgeBlue">🧾</span>
+        </div>
+        <div class="EmployeeDashboardCardValue">24</div>
+      </article>
+
+      <article class="EmployeeDashboardCard">
+        <div class="EmployeeDashboardCardHeader">
+          <h2 class="EmployeeDashboardCardTitle">Pending Orders</h2>
+          <span class="EmployeeDashboardCardBadge EmployeeDashboardBadgeAmber">🕒</span>
+        </div>
+        <div class="EmployeeDashboardCardValue">8</div>
+      </article>
+
+      <article class="EmployeeDashboardCard">
+        <div class="EmployeeDashboardCardHeader">
+          <h2 class="EmployeeDashboardCardTitle">Approved Orders</h2>
+          <span class="EmployeeDashboardCardBadge EmployeeDashboardBadgeGreen">✅</span>
+        </div>
+        <div class="EmployeeDashboardCardValue">16</div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
