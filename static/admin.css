@@ -481,6 +481,33 @@ body {
     background: #fbfcff
 }
 
+/* ===== Suppliers modal/form ===== */
+.adminSuppliersDialog{
+  border:0; border-radius:12px; padding:0; width:min(480px, 92vw);
+  box-shadow:var(--adminShadow);
+}
+.adminSuppliersDialog::backdrop{
+  background:rgba(15,23,42,.35);
+}
+
+.adminSuppliersForm{display:grid; gap:12px; padding:18px; background:#fff; border-radius:12px}
+.adminSuppliersFormTitle{margin:0 0 6px; font-size:18px}
+.adminSuppliersLabel{display:grid; gap:6px; font-weight:600; font-size:14px}
+.adminSuppliersInput{
+  border:1px solid var(--adminBorder); border-radius:8px; padding:10px 12px; font-size:14px;
+}
+.adminSuppliersInput:focus{outline:none; border-color:var(--adminPrimary); box-shadow:0 0 0 4px var(--adminPrimarySoft)}
+.adminSuppliersFormActions{display:flex; gap:10px; justify-content:flex-end; margin-top:6px}
+.adminSuppliersBtn{
+  border:1px solid var(--adminBorder); background:#fff; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:700;
+}
+.adminSuppliersBtn:hover{background:#f8fafc}
+.adminSuppliersPrimaryBtn{
+  border:1px solid #306fe0; background:var(--adminPrimary); color:#fff; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:700;
+}
+.adminSuppliersPrimaryBtn:hover{background:#2f6fe5}
+
+
 /* ===== Employees page (adminEmployees*) ===== */
 .adminEmployeesPage {
     max-width: 1200px;

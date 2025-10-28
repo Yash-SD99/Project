@@ -26,7 +26,7 @@
         <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
       </nav>
       <div class="adminNavRight">
-        <span class="adminNavUser">Admin User</span>
+        <span class="adminNavUser">{{ session.get('user_name','Admin User') }}</span>
         <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
@@ -36,8 +36,66 @@
   <main class="adminSuppliersPage">
     <div class="adminSuppliersHeader">
       <h1 class="adminSuppliersTitle">Suppliers</h1>
-      <a href="#" class="adminSuppliersAddBtn"><span class="adminSuppliersAddIcon">＋</span> Add Supplier</a>
+      <button type="button" class="adminSuppliersAddBtn" onclick="document.getElementById('addSupplierDlg').showModal()">
+        <span class="adminSuppliersAddIcon">＋</span> Add Supplier
+      </button>
     </div>
+
+    <!-- Add Supplier Modal -->
+    <dialog id="addSupplierDlg" class="adminSuppliersDialog">
+      <form method="post" action="{{ url_for('admin_suppliers_add') }}" class="adminSuppliersForm">
+        <h3 class="adminSuppliersFormTitle">Add Supplier</h3>
+
+        <label class="adminSuppliersLabel">Name
+          <input class="adminSuppliersInput" type="text" name="name" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Contact
+          <input class="adminSuppliersInput" type="text" name="contact" placeholder="+1 234-567-8901">
+        </label>
+
+        <label class="adminSuppliersLabel">Email
+          <input class="adminSuppliersInput" type="email" name="email" placeholder="supplier@example.com">
+        </label>
+
+        <label class="adminSuppliersLabel">Address
+          <input class="adminSuppliersInput" type="text" name="address" placeholder="123 Business St, NY">
+        </label>
+
+        <div class="adminSuppliersFormActions">
+          <button type="submit" class="adminSuppliersPrimaryBtn">Save</button>
+          <button type="button" class="adminSuppliersBtn" onclick="document.getElementById('addSupplierDlg').close()">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Edit Supplier Modal -->
+    <dialog id="editSupplierDlg" class="adminSuppliersDialog">
+      <form id="editSupplierForm" method="post" class="adminSuppliersForm">
+        <h3 class="adminSuppliersFormTitle">Edit Supplier</h3>
+
+        <label class="adminSuppliersLabel">Name
+          <input class="adminSuppliersInput" type="text" name="name" id="editSupName" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Contact
+          <input class="adminSuppliersInput" type="text" name="contact" id="editSupContact">
+        </label>
+
+        <label class="adminSuppliersLabel">Email
+          <input class="adminSuppliersInput" type="email" name="email" id="editSupEmail">
+        </label>
+
+        <label class="adminSuppliersLabel">Address
+          <input class="adminSuppliersInput" type="text" name="address" id="editSupAddress">
+        </label>
+
+        <div class="adminSuppliersFormActions">
+          <button type="submit" class="adminSuppliersPrimaryBtn">Update</button>
+          <button type="button" class="adminSuppliersBtn" onclick="document.getElementById('editSupplierDlg').close()">Cancel</button>
+        </div>
+      </form>
+    </dialog>
 
     <section class="adminSuppliersPanel">
       <div class="adminSuppliersPanelHead">
@@ -50,34 +108,51 @@
             <tr>
               <th>Name</th>
               <th>Contact</th>
+              <th>Email</th>
               <th>Address</th>
+              <th class="adminEmployeesTextRight">Actions</th>
             </tr>
           </thead>
           <tbody>
+            {% for s in suppliers %}
             <tr>
-              <td>Acme Corp</td>
-              <td>+1 234-567-8901</td>
-              <td>123 Business St, NY</td>
+              <td>{{ s.name }}</td>
+              <td>{{ s.contact }}</td>
+              <td>{{ s.email }}</td>
+              <td>{{ s.address }}</td>
+              <td class="adminEmployeesTextRight">
+                <button
+                  class="adminOrdersIconBtn adminOrdersIconBtnGray"
+                  title="Edit"
+                  onclick="openEditSupplier('{{ s.id }}', '{{ s.name|e }}', '{{ s.contact|e }}', '{{ s.email|e }}', '{{ s.address|e }}')">✎</button>
+
+                <form method="post" action="{{ url_for('admin_suppliers_delete', supplier_id=s.id) }}" style="display:inline">
+                  <button class="adminOrdersIconBtn adminOrdersIconBtnRed" title="Delete"
+                          onclick="return confirm('Delete {{ s.name }}?')">🗑</button>
+                </form>
+              </td>
             </tr>
+            {% else %}
             <tr>
-              <td>Global Supplies Inc</td>
-              <td>+1 234-567-8902</td>
-              <td>456 Commerce Ave, CA</td>
+              <td colspan="5">No suppliers found.</td>
             </tr>
-            <tr>
-              <td>Premier Distributors</td>
-              <td>+1 234-567-8903</td>
-              <td>789 Trade Blvd, TX</td>
-            </tr>
-            <tr>
-              <td>Tech Solutions Ltd</td>
-              <td>+1 234-567-8904</td>
-              <td>321 Innovation Dr, WA</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </section>
   </main>
+
+  <script>
+    function openEditSupplier(id, name, contact, email, address){
+      const dlg = document.getElementById('editSupplierDlg');
+      document.getElementById('editSupName').value = name || '';
+      document.getElementById('editSupContact').value = contact || '';
+      document.getElementById('editSupEmail').value = email || '';
+      document.getElementById('editSupAddress').value = address || '';
+      document.getElementById('editSupplierForm').action = `/admin/suppliers/${id}/edit`;
+      dlg.showModal();
+    }
+  </script>
 </body>
 </html>
