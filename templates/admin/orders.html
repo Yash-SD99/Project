@@ -1,122 +1,103 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>POMS — Manage Orders</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orderly — Orders</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body class="adminOrdersBody">
-    <!-- Top Nav -->
-    <header class="adminNavBar">
-        <div class="adminNavInner">
-            <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
-                <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}"
-                    alt="Orderly logo">
-                <span class="adminNavBrandText">Orderly</span>
-            </a>
+  <!-- Shared navbar -->
+  <header class="adminNavBar">
+    <div class="adminNavInner">
+      <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
+        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="adminNavBrandText">Orderly</span>
+      </a>
+      <nav class="adminNavLinks">
+        <a class="adminNavLink" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_orders') }}">Manage Orders</a>
+        <a class="adminNavLink" href="{{ url_for('admin_suppliers') }}">Suppliers</a>
+        <a class="adminNavLink" href="{{ url_for('admin_employee') }}">Employees</a>
+        <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
+      </nav>
+      <div class="adminNavRight">
+        <span class="adminNavUser">{{ session.get('user_name','Admin User') }}</span>
+        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
 
-            <nav class="adminNavLinks">
-                <a class="adminNavLink" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
-                <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_orders') }}">Manage Orders</a>
-                <a class="adminNavLink" href="{{ url_for('admin_suppliers') }}">Suppliers</a>
-                <a class="adminNavLink" href="{{ url_for('admin_employee') }}">Employees</a>
-                <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
-            </nav>
+  <main class="adminOrdersPage">
+    <div class="adminEmployeesHeader">
+      <h1 class="adminEmployeesTitle">Orders</h1>
+    </div>
 
-            <div class="adminNavRight">
-                <span class="adminNavUser">Admin User</span>
-                <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
-            </div>
-        </div>
-    </header>
+    <section class="adminSuppliersPanel">
+      <div class="adminSuppliersPanelHead">
+        <h2 class="adminSuppliersPanelTitle">Purchase Orders</h2>
+      </div>
 
+      <div class="adminSuppliersTableWrap">
+        <table class="adminSuppliersTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Supplier</th>
+              <th>Employee</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th class="adminEmployeesTextRight">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in orders %}
+            <tr>
+              <td>{{ o.code }}</td>
+              <td>{{ o.supplier.name if o.supplier else '-' }}</td>
+              <td>{{ o.employee.name if o.employee else '-' }}</td>
+              <td>{{ o.date }}</td>
+              <td>${{ '%.2f'|format(o.amount or 0) }}</td>
+              <td>
+                <span class="adminReportsBadge
+                  {% if o.status=='Approved' %}adminReportsBadgeGreen
+                  {% elif o.status=='Rejected' %}adminReportsBadgeRed
+                  {% else %}adminReportsBadgeAmber{% endif %}">
+                  {{ o.status }}
+                </span>
+              </td>
+              <td class="adminEmployeesTextRight">
+                {% if o.status != 'Approved' %}
+                <form method="post" action="{{ url_for('admin_orders_status', order_id=o.id) }}" style="display:inline">
+                  <input type="hidden" name="status" value="Approved">
+                  <button class="adminOrdersIconBtn adminOrdersIconBtnGreen" title="Approve">✓</button>
+                </form>
+                {% endif %}
 
+                {% if o.status != 'Rejected' %}
+                <form method="post" action="{{ url_for('admin_orders_status', order_id=o.id) }}" style="display:inline">
+                  <input type="hidden" name="status" value="Rejected">
+                  <button class="adminOrdersIconBtn adminOrdersIconBtnAmber" title="Reject">✕</button>
+                </form>
+                {% endif %}
 
-    <!-- Page -->
-    <main class="adminOrdersPage">
-        <h1 class="adminOrdersTitle">Manage Orders</h1>
-
-        <section class="adminOrdersPanel">
-            <div class="adminOrdersPanelHead">
-                <h2 class="adminOrdersPanelTitle">All Purchase Orders</h2>
-            </div>
-
-            <div class="adminOrdersTableWrap">
-                <table class="adminOrdersTable">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Supplier</th>
-                            <th>Employee</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th class="adminOrdersTextRight">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>PO-001</td>
-                            <td>Acme Corp</td>
-                            <td>John Doe</td>
-                            <td>2025-01-15</td>
-                            <td><span class="adminOrdersBadge adminOrdersBadgeGreen">Approved</span></td>
-                            <td class="adminOrdersTextRight">
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnGray" title="View">🛈</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>PO-002</td>
-                            <td>Global Supplies Inc</td>
-                            <td>Jane Smith</td>
-                            <td>2025-01-18</td>
-                            <td><span class="adminOrdersBadge adminOrdersBadgeAmber">Pending</span></td>
-                            <td class="adminOrdersTextRight">
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnGreen" title="Approve">✓</button>
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnRed" title="Reject">✕</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>PO-003</td>
-                            <td>Premier Distributors</td>
-                            <td>Mike Johnson</td>
-                            <td>2025-01-20</td>
-                            <td><span class="adminOrdersBadge adminOrdersBadgeGreen">Approved</span></td>
-                            <td class="adminOrdersTextRight">
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnGray" title="View">🛈</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>PO-004</td>
-                            <td>Tech Solutions Ltd</td>
-                            <td>Sarah Williams</td>
-                            <td>2025-01-22</td>
-                            <td><span class="adminOrdersBadge adminOrdersBadgeAmber">Pending</span></td>
-                            <td class="adminOrdersTextRight">
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnGreen" title="Approve">✓</button>
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnRed" title="Reject">✕</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>PO-005</td>
-                            <td>Acme Corp</td>
-                            <td>John Doe</td>
-                            <td>2025-01-25</td>
-                            <td><span class="adminOrdersBadge adminOrdersBadgeRed">Rejected</span></td>
-                            <td class="adminOrdersTextRight">
-                                <button class="adminOrdersIconBtn adminOrdersIconBtnGray" title="View">🛈</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+                <form method="post" action="{{ url_for('admin_orders_delete', order_id=o.id) }}" style="display:inline">
+                  <button class="adminOrdersIconBtn adminOrdersIconBtnRed" title="Delete" onclick="return confirm('Delete {{ o.code }}?')">🗑</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7">No orders found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 </body>
-
 </html>

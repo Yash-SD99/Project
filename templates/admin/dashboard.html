@@ -1,26 +1,23 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>POMS — Admin Dashboard</title>
+  <title>Orderly — Admin Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+<body>
 
-<body class="adminDashboardBody">
-  <!-- Top Nav -->
-
+  <!-- Shared navbar -->
   <header class="adminNavBar">
     <div class="adminNavInner">
       <a class="adminNavBrand" href="{{ url_for('admin_dashboard') }}">
         <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
         <span class="adminNavBrandText">Orderly</span>
       </a>
-
       <nav class="adminNavLinks">
         <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
         <a class="adminNavLink" href="{{ url_for('admin_orders') }}">Manage Orders</a>
@@ -28,54 +25,87 @@
         <a class="adminNavLink" href="{{ url_for('admin_employee') }}">Employees</a>
         <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
       </nav>
-
       <div class="adminNavRight">
-        <span class="adminNavUser">Admin User</span>
+        <span class="adminNavUser">{{ session.get('user_name','Admin User') }}</span>
         <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
   </header>
 
-
-
-  <!-- Page -->
   <main class="adminDashboardPage">
-    <h1 class="adminDashboardTitle">Admin Dashboard</h1>
+    <!-- KPI cards -->
+    <section class="adminDashKpis">
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Total Orders</div>
+        <div class="adminDashCardValue">{{ total_orders }}</div>
+      </div>
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Approved</div>
+        <div class="adminDashCardValue">{{ approved }}</div>
+      </div>
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Pending</div>
+        <div class="adminDashCardValue">{{ pending }}</div>
+      </div>
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Rejected</div>
+        <div class="adminDashCardValue">{{ rejected }}</div>
+      </div>
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Suppliers</div>
+        <div class="adminDashCardValue">{{ total_suppliers }}</div>
+      </div>
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Employees</div>
+        <div class="adminDashCardValue">{{ total_employees }}</div>
+      </div>
+      <div class="adminDashCard">
+        <div class="adminDashCardLabel">Approved Spend</div>
+        <div class="adminDashCardValue">${{ '%.2f'|format(spend_approved) }}</div>
+      </div>
+    </section>
 
-    <section class="adminDashboardCardsRow">
-      <article class="adminDashboardCard">
-        <div class="adminDashboardCardHeader">
-          <h2 class="adminDashboardCardTitle">Total Orders</h2>
-          <span class="adminDashboardCardBadge adminDashboardBadgeBlue" aria-hidden="true">🧾</span>
-        </div>
-        <div class="adminDashboardCardValue">156</div>
-      </article>
-
-      <article class="adminDashboardCard">
-        <div class="adminDashboardCardHeader">
-          <h2 class="adminDashboardCardTitle">Pending Approvals</h2>
-          <span class="adminDashboardCardBadge adminDashboardBadgeAmber" aria-hidden="true">🕒</span>
-        </div>
-        <div class="adminDashboardCardValue">23</div>
-      </article>
-
-      <article class="adminDashboardCard">
-        <div class="adminDashboardCardHeader">
-          <h2 class="adminDashboardCardTitle">Approved Orders</h2>
-          <span class="adminDashboardCardBadge adminDashboardBadgeGreen" aria-hidden="true">✅</span>
-        </div>
-        <div class="adminDashboardCardValue">118</div>
-      </article>
-
-      <article class="adminDashboardCard">
-        <div class="adminDashboardCardHeader">
-          <h2 class="adminDashboardCardTitle">Rejected Orders</h2>
-          <span class="adminDashboardCardBadge adminDashboardBadgeRed" aria-hidden="true">✖</span>
-        </div>
-        <div class="adminDashboardCardValue">15</div>
-      </article>
+    <!-- Recent orders -->
+    <section class="adminSuppliersPanel" style="margin-top:18px;">
+      <div class="adminSuppliersPanelHead">
+        <h2 class="adminSuppliersPanelTitle">Recent Orders</h2>
+      </div>
+      <div class="adminSuppliersTableWrap">
+        <table class="adminSuppliersTable">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Supplier</th>
+              <th>Employee</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in latest_orders %}
+            <tr>
+              <td>{{ o.code }}</td>
+              <td>{{ o.supplier.name if o.supplier else '-' }}</td>
+              <td>{{ o.employee.name if o.employee else '-' }}</td>
+              <td>{{ o.date }}</td>
+              <td>${{ '%.2f'|format(o.amount or 0) }}</td>
+              <td>
+                <span class="adminReportsBadge
+                  {% if o.status=='Approved' %}adminReportsBadgeGreen
+                  {% elif o.status=='Rejected' %}adminReportsBadgeRed
+                  {% else %}adminReportsBadgeAmber{% endif %}">
+                  {{ o.status }}
+                </span>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6">No orders yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 </body>
-
 </html>

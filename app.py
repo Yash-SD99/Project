@@ -1,142 +1,7 @@
-# from flask import Flask, render_template, request, redirect, session, flash
-# from models import db, User  # import db instance and User model
-
-# app = Flask(__name__)
-# app.secret_key = "secret123"  # Needed for session
-
-# # -------------------- SQLite / SQLAlchemy --------------------
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///orderly.db"
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# db.init_app(app)
-
-# # -------------------- LOGIN --------------------
-# @app.route('/')
-# def home():
-#     return render_template('login.html')
-
-# @app.route('/login', methods=['POST'])
-# def login():
-#     email = request.form['email'].strip()
-#     password = request.form['password'].strip()
-
-#     # Look up user in SQLite
-#     user = User.query.filter_by(email=email, password=password).first()
-#     if not user:
-#         flash("Invalid credentials! Please try again.")
-#         return redirect('/')
-
-#     session['role'] = user.role
-#     session['user_id'] = user.id
-#     session['user_name'] = user.name
-
-#     if user.role == 'admin':
-#         return redirect('/admin/dashboard')
-#     else:
-#         return redirect('/employee/dashboard')
-
-# # -------------------- ADMIN ROUTES --------------------
-# @app.route('/admin/dashboard')
-# def admin_dashboard():
-#     if session.get('role') == 'admin':
-#         return render_template('admin/dashboard.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# @app.route('/admin/orders')
-# def admin_orders():
-#     if session.get('role') == 'admin':
-#         return render_template('admin/orders.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# from models import Supplier
-
-# @app.route('/admin/suppliers')
-# def admin_suppliers():
-#     if session.get('role') == 'admin':
-#         suppliers = Supplier.query.order_by(Supplier.name).all()
-#         return render_template('admin/suppliers.html', suppliers=suppliers)
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-
-# @app.route('/admin/employees')
-# def admin_employee():
-#     if session.get('role') == 'admin':
-#         return render_template('admin/employees.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# @app.route('/admin/reports')
-# def admin_reports():
-#     if session.get('role') == 'admin':
-#         return render_template('admin/reports.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# # -------------------- EMPLOYEE ROUTES --------------------
-# @app.route('/employee/dashboard')
-# def employee_dashboard():
-#     if session.get('role') == 'employee':
-#         return render_template('employee/dashboard.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# @app.route('/employee/myOrders')
-# def employee_myorders():
-#     if session.get('role') == 'employee':
-#         return render_template('employee/myOrders.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# @app.route('/employee/createOrder')
-# def employee_createorders():
-#     if session.get('role') == 'employee':
-#         return render_template('employee/createOrder.html')
-#     flash("Unauthorized access")
-#     return redirect('/')
-
-# # -------------------- LOGOUT --------------------
-# @app.route('/logout')
-# def logout():
-#     session.clear()
-#     flash("You have been logged out successfully.")
-#     return redirect('/')
-
-# # -------------------- MAIN --------------------
-# if __name__ == "__main__":
-#     # create tables on first run
-#     with app.app_context():
-#         db.create_all()
-#     app.run(debug=True)
-
-# from models import Supplier
-
-# #add suppliers
-# @app.route('/admin/suppliers/add', methods=['POST'])
-# def admin_suppliers_add():
-#     if session.get('role') != 'admin':
-#         flash("Unauthorized access")
-#         return redirect('/')
-
-#     name = request.form.get('name','').strip()
-#     contact = request.form.get('contact','').strip()
-#     email = request.form.get('email','').strip()
-#     address = request.form.get('address','').strip()
-
-#     if not name:
-#         flash("Supplier name is required.")
-#         return redirect('/admin/suppliers')
-
-#     s = Supplier(name=name, contact=contact, email=email, address=address)
-#     from models import db
-#     db.session.add(s)
-#     db.session.commit()
-#     flash("Supplier added.")
-#     return redirect('/admin/suppliers')
-
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, Response
+from sqlalchemy import and_, func
 from models import db, User, Supplier, Order  # Order is available for future pages
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "secret123"  # Needed for session
@@ -173,18 +38,58 @@ def login():
 # -------------------- ADMIN ROUTES --------------------
 @app.route('/admin/dashboard')
 def admin_dashboard():
-    if session.get('role') == 'admin':
-        # You can compute real counts later from Order
-        return render_template('admin/dashboard.html')
-    flash("Unauthorized access")
-    return redirect('/')
+    if session.get('role') != 'admin':
+        flash("Unauthorized access"); return redirect('/')
+
+    total_orders = Order.query.count()
+    approved = Order.query.filter_by(status="Approved").count()
+    pending = Order.query.filter_by(status="Pending").count()
+    rejected = Order.query.filter_by(status="Rejected").count()
+    total_suppliers = Supplier.query.count()
+    total_employees = User.query.filter_by(role='employee').count()
+    spend_approved = db.session.query(func.coalesce(func.sum(Order.amount), 0.0)).filter(Order.status=="Approved").scalar()
+
+    # latest 5
+    latest_orders = Order.query.order_by(Order.id.desc()).limit(5).all()
+
+    return render_template('admin/dashboard.html',
+                           total_orders=total_orders,
+                           approved=approved,
+                           pending=pending,
+                           rejected=rejected,
+                           total_suppliers=total_suppliers,
+                           total_employees=total_employees,
+                           spend_approved=round(spend_approved or 0, 2),
+                           latest_orders=latest_orders)
+
 
 @app.route('/admin/orders')
 def admin_orders():
     if session.get('role') == 'admin':
-        return render_template('admin/orders.html')
-    flash("Unauthorized access")
-    return redirect('/')
+        orders = Order.query.order_by(Order.id).all()
+        return render_template('admin/orders.html', orders=orders)
+    flash("Unauthorized access"); return redirect('/')
+
+@app.route('/admin/orders/<int:order_id>/status', methods=['POST'])
+def admin_orders_status(order_id):
+    if session.get('role') != 'admin':
+        flash("Unauthorized access"); return redirect('/')
+    o = Order.query.get_or_404(order_id)
+    o.status = request.form.get('status','Pending')
+    db.session.commit()
+    flash(f"Order {o.code} set to {o.status}.")
+    return redirect('/admin/orders')
+
+@app.route('/admin/orders/<int:order_id>/delete', methods=['POST'])
+def admin_orders_delete(order_id):
+    if session.get('role') != 'admin':
+        flash("Unauthorized access"); return redirect('/')
+    o = Order.query.get_or_404(order_id)
+    db.session.delete(o)
+    db.session.commit()
+    flash("Order deleted.")
+    return redirect('/admin/orders')
+
 
 @app.route('/admin/suppliers')
 def admin_suppliers():
@@ -344,10 +249,96 @@ def admin_employees_delete(user_id):
 
 @app.route('/admin/reports')
 def admin_reports():
-    if session.get('role') == 'admin':
-        return render_template('admin/reports.html')
-    flash("Unauthorized access")
-    return redirect('/')
+    if session.get('role') != 'admin':
+        flash("Unauthorized access"); return redirect('/')
+
+    # Filters
+    status = request.args.get('status', '').strip()
+    supplier_id = request.args.get('supplier_id', '').strip()
+    start = request.args.get('start', '').strip()
+    end = request.args.get('end', '').strip()
+
+    q = Order.query
+
+    conds = []
+    if status:
+        conds.append(Order.status == status)
+    if supplier_id:
+        try:
+            conds.append(Order.supplier_id == int(supplier_id))
+        except ValueError:
+            pass
+    # Date range (inclusive)
+    def parse_d(s):
+        try:
+            return datetime.strptime(s, "%Y-%m-%d").date()
+        except Exception:
+            return None
+    d1 = parse_d(start)
+    d2 = parse_d(end)
+    if d1: conds.append(Order.date >= d1)
+    if d2: conds.append(Order.date <= d2)
+
+    if conds:
+        q = q.filter(and_(*conds))
+
+    q = q.order_by(Order.date.desc(), Order.id.desc())
+    orders = q.all()
+
+    total_amount = sum((o.amount or 0) for o in orders)
+    suppliers = Supplier.query.order_by(Supplier.name).all()
+
+    return render_template('admin/reports.html',
+                           orders=orders,
+                           suppliers=suppliers,
+                           status=status,
+                           supplier_id=supplier_id,
+                           start=start,
+                           end=end,
+                           total_amount=round(total_amount, 2))
+
+@app.route('/admin/reports/export.csv')
+def admin_reports_export():
+    if session.get('role') != 'admin':
+        flash("Unauthorized access"); return redirect('/')
+
+    # reuse same filters
+    status = request.args.get('status', '').strip()
+    supplier_id = request.args.get('supplier_id', '').strip()
+    start = request.args.get('start', '').strip()
+    end = request.args.get('end', '').strip()
+
+    from datetime import datetime
+    from sqlalchemy import and_
+    q = Order.query
+    conds = []
+    if status:
+        conds.append(Order.status == status)
+    if supplier_id:
+        try: conds.append(Order.supplier_id == int(supplier_id))
+        except ValueError: pass
+    def parse_d(s):
+        try: return datetime.strptime(s, "%Y-%m-%d").date()
+        except Exception: return None
+    d1 = parse_d(start); d2 = parse_d(end)
+    if d1: conds.append(Order.date >= d1)
+    if d2: conds.append(Order.date <= d2)
+    if conds: q = q.filter(and_(*conds))
+    q = q.order_by(Order.date.desc(), Order.id.desc())
+    rows = q.all()
+
+    # CSV build
+    def generate():
+        yield "Order Code,Supplier,Employee,Date,Amount,Status\n"
+        for o in rows:
+            sup = o.supplier.name if o.supplier else ""
+            emp = o.employee.name if o.employee else ""
+            amt = f"{(o.amount or 0):.2f}"
+            yield f"{o.code},{sup},{emp},{o.date},{amt},{o.status}\n"
+
+    return Response(generate(), mimetype="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=report.csv"})
+
 
 # -------------------- EMPLOYEE ROUTES --------------------
 @app.route('/employee/dashboard')

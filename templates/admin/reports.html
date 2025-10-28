@@ -26,29 +26,64 @@
         <a class="adminNavLink adminNavLinkActive" href="{{ url_for('admin_reports') }}">Reports</a>
       </nav>
       <div class="adminNavRight">
-        <span class="adminNavUser">Admin User</span>
+        <span class="adminNavUser">{{ session.get('user_name','Admin User') }}</span>
         <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
   </header>
 
-  <!-- Page content -->
   <main class="adminReportsPage">
-    <div class="adminReportsHeader">
-      <h1 class="adminReportsTitle">Reports</h1>
-      <a href="#" class="adminReportsDownloadBtn">
-        <span class="adminReportsDownloadIcon">⬇</span>
-        Download Report
-      </a>
+    <div class="adminSuppliersHeader">
+      <h1 class="adminSuppliersTitle">Reports</h1>
     </div>
 
-    <section class="adminReportsPanel">
-      <div class="adminReportsPanelHead">
-        <h2 class="adminReportsPanelTitle">Purchase Order Report</h2>
+    <!-- Filters -->
+    <section class="adminSuppliersPanel">
+      <div class="adminSuppliersPanelHead">
+        <h2 class="adminSuppliersPanelTitle">Filters</h2>
+      </div>
+      <form class="adminFiltersForm" method="get" action="{{ url_for('admin_reports') }}">
+        <div class="adminFiltersRow">
+          <label>Status
+            <select name="status" class="adminSuppliersInput">
+              <option value="" {{ 'selected' if not status }}>All</option>
+              <option value="Pending" {{ 'selected' if status=='Pending' }}>Pending</option>
+              <option value="Approved" {{ 'selected' if status=='Approved' }}>Approved</option>
+              <option value="Rejected" {{ 'selected' if status=='Rejected' }}>Rejected</option>
+            </select>
+          </label>
+          <label>Supplier
+            <select name="supplier_id" class="adminSuppliersInput">
+              <option value="" {{ 'selected' if not supplier_id }}>All</option>
+              {% for s in suppliers %}
+              <option value="{{ s.id }}" {{ 'selected' if supplier_id|int==s.id }}>{{ s.name }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>Start
+            <input type="date" name="start" value="{{ start }}" class="adminSuppliersInput">
+          </label>
+          <label>End
+            <input type="date" name="end" value="{{ end }}" class="adminSuppliersInput">
+          </label>
+        </div>
+        <div class="adminSuppliersFormActions" style="margin-top:10px">
+          <button type="submit" class="adminSuppliersPrimaryBtn">Apply</button>
+          <a class="adminSuppliersBtn" href="{{ url_for('admin_reports') }}">Reset</a>
+          <a class="adminSuppliersBtn" href="{{ url_for('admin_reports_export', status=status, supplier_id=supplier_id, start=start, end=end) }}">Export CSV</a>
+        </div>
+      </form>
+    </section>
+
+    <!-- Table -->
+    <section class="adminSuppliersPanel" style="margin-top:16px;">
+      <div class="adminSuppliersPanelHead">
+        <h2 class="adminSuppliersPanelTitle">Report</h2>
+        <div class="adminSuppliersPanelSub">Total Amount: ${{ '%.2f'|format(total_amount) }}</div>
       </div>
 
-      <div class="adminReportsTableWrap">
-        <table class="adminReportsTable">
+      <div class="adminSuppliersTableWrap">
+        <table class="adminSuppliersTable">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -60,46 +95,25 @@
             </tr>
           </thead>
           <tbody>
+            {% for o in orders %}
             <tr>
-              <td>PO-001</td>
-              <td>Acme Corp</td>
-              <td>John Doe</td>
-              <td>2025-01-15</td>
-              <td>$1,250.00</td>
-              <td><span class="adminReportsBadge adminReportsBadgeGreen">Approved</span></td>
+              <td>{{ o.code }}</td>
+              <td>{{ o.supplier.name if o.supplier else '-' }}</td>
+              <td>{{ o.employee.name if o.employee else '-' }}</td>
+              <td>{{ o.date }}</td>
+              <td>${{ '%.2f'|format(o.amount or 0) }}</td>
+              <td>
+                <span class="adminReportsBadge
+                  {% if o.status=='Approved' %}adminReportsBadgeGreen
+                  {% elif o.status=='Rejected' %}adminReportsBadgeRed
+                  {% else %}adminReportsBadgeAmber{% endif %}">
+                  {{ o.status }}
+                </span>
+              </td>
             </tr>
-            <tr>
-              <td>PO-002</td>
-              <td>Global Supplies Inc</td>
-              <td>Jane Smith</td>
-              <td>2025-01-18</td>
-              <td>$3,450.00</td>
-              <td><span class="adminReportsBadge adminReportsBadgeAmber">Pending</span></td>
-            </tr>
-            <tr>
-              <td>PO-003</td>
-              <td>Premier Distributors</td>
-              <td>Mike Johnson</td>
-              <td>2025-01-20</td>
-              <td>$890.00</td>
-              <td><span class="adminReportsBadge adminReportsBadgeGreen">Approved</span></td>
-            </tr>
-            <tr>
-              <td>PO-004</td>
-              <td>Tech Solutions Ltd</td>
-              <td>Sarah Williams</td>
-              <td>2025-01-22</td>
-              <td>$2,100.00</td>
-              <td><span class="adminReportsBadge adminReportsBadgeRed">Rejected</span></td>
-            </tr>
-            <tr>
-              <td>PO-005</td>
-              <td>Acme Corp</td>
-              <td>John Doe</td>
-              <td>2025-01-25</td>
-              <td>$1,750.00</td>
-              <td><span class="adminReportsBadge adminReportsBadgeGreen">Approved</span></td>
-            </tr>
+            {% else %}
+            <tr><td colspan="6">No data for selected filters.</td></tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
