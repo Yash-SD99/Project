@@ -4,43 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orderly — My Orders</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='employee.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Shared Employee Navbar -->
-  <header class="EmployeeNavBar">
-    <div class="EmployeeNavInner">
-      <a class="EmployeeNavBrand" href="{{ url_for('employee_dashboard') }}">
-        <img class="EmployeeNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
-        <span class="EmployeeNavBrandText">Orderly</span>
+  <!-- Shared navbar -->
+  <header class="adminNavBar">
+    <div class="adminNavInner">
+      <a class="adminNavBrand" href="{{ url_for('employee_dashboard') }}">
+        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span class="adminNavBrandText">Orderly</span>
       </a>
-      <nav class="EmployeeNavLinks">
-        <a class="EmployeeNavLink" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
-        <a class="EmployeeNavLink" href="{{ url_for('employee_createorders') }}">Create Purchase Order</a>
-        <a class="EmployeeNavLink EmployeeNavLinkActive" href="{{ url_for('employee_myorders') }}">My Orders</a>
+      <nav class="adminNavLinks">
+        <a class="adminNavLink" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('employee_myorders') }}">My Orders</a>
+        <a class="adminNavLink" href="{{ url_for('employee_createorders') }}">Create Order</a>
       </nav>
-      <div class="EmployeeNavRight">
-        <span class="EmployeeNavUser">John Employee</span>
-        <a class="EmployeeNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      <div class="adminNavRight">
+        <span class="adminNavUser">{{ session.get('user_name','Employee') }}</span>
+        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
   </header>
 
-  <!-- Page -->
-  <main class="EmployeeMyOrdersPage">
-    <h1 class="EmployeeMyOrdersTitle">My Orders</h1>
+  <main class="adminSuppliersPage">
+    <div class="adminSuppliersHeader">
+      <h1 class="adminSuppliersTitle">My Orders</h1>
+      <a href="{{ url_for('employee_createorders') }}" class="adminSuppliersAddBtn"><span class="adminSuppliersAddIcon">＋</span> Create Order</a>
+    </div>
 
-    <section class="EmployeeMyOrdersPanel">
-      <div class="EmployeeMyOrdersPanelHead">
-        <h2 class="EmployeeMyOrdersPanelTitle">Purchase Orders</h2>
+    <section class="adminSuppliersPanel">
+      <div class="adminSuppliersPanelHead">
+        <h2 class="adminSuppliersPanelTitle">Order List</h2>
       </div>
 
-      <div class="EmployeeMyOrdersTableWrap">
-        <table class="EmployeeMyOrdersTable">
+      <div class="adminSuppliersTableWrap">
+        <table class="adminSuppliersTable">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -50,36 +52,23 @@
             </tr>
           </thead>
           <tbody>
+            {% for o in orders %}
             <tr>
-              <td>PO-001</td>
-              <td>Acme Corp</td>
-              <td>2025-01-15</td>
-              <td><span class="EmployeeMyOrdersBadge EmployeeMyOrdersBadgeGreen">Approved</span></td>
+              <td>{{ o.code }}</td>
+              <td>{{ o.supplier.name if o.supplier else '-' }}</td>
+              <td>{{ o.date }}</td>
+              <td>
+                <span class="EmployeeMyOrdersBadge
+                  {% if o.status=='Approved' %}EmployeeMyOrdersBadgeGreen
+                  {% elif o.status=='Rejected' %}EmployeeMyOrdersBadgeRed
+                  {% else %}EmployeeMyOrdersBadgeAmber{% endif %}">
+                  {{ o.status }}
+                </span>
+              </td>
             </tr>
-            <tr>
-              <td>PO-002</td>
-              <td>Global Supplies Inc</td>
-              <td>2025-01-18</td>
-              <td><span class="EmployeeMyOrdersBadge EmployeeMyOrdersBadgeAmber">Pending</span></td>
-            </tr>
-            <tr>
-              <td>PO-003</td>
-              <td>Premier Distributors</td>
-              <td>2025-01-20</td>
-              <td><span class="EmployeeMyOrdersBadge EmployeeMyOrdersBadgeGreen">Approved</span></td>
-            </tr>
-            <tr>
-              <td>PO-004</td>
-              <td>Tech Solutions Ltd</td>
-              <td>2025-01-22</td>
-              <td><span class="EmployeeMyOrdersBadge EmployeeMyOrdersBadgeRed">Rejected</span></td>
-            </tr>
-            <tr>
-              <td>PO-005</td>
-              <td>Acme Corp</td>
-              <td>2025-01-25</td>
-              <td><span class="EmployeeMyOrdersBadge EmployeeMyOrdersBadgeAmber">Pending</span></td>
-            </tr>
+            {% else %}
+            <tr><td colspan="4">No orders yet.</td></tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
