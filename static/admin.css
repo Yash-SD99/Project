@@ -244,6 +244,12 @@ body {
     letter-spacing: .3px
 }
 
+.adminDashboardPage{max-width:1200px;margin:18px auto;padding:0 16px}
+.adminDashKpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.adminDashCard{background:#fff;border:1px solid var(--adminBorder);border-radius:12px;padding:14px 16px;box-shadow:var(--adminShadow)}
+.adminDashCardLabel{font-size:12px;color:#64748b;margin-bottom:6px}
+.adminDashCardValue{font-size:24px;font-weight:800}
+
 /* =========================================================
    Manage Orders page (adminOrders*)
    ========================================================= */
@@ -758,3 +764,7 @@ body {
     color: #ef4444;
     border-color: #ffc7ce
 }
+
+.adminFiltersForm{padding:16px; display:grid; gap:10px}
+.adminFiltersRow{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px}
+.adminSuppliersPanelSub{font-size:12px; color:#64748b}
