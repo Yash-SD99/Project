@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Shared navbar -->
@@ -26,7 +28,7 @@
         <a class="adminNavLink" href="{{ url_for('admin_reports') }}">Reports</a>
       </nav>
       <div class="adminNavRight">
-        <span class="adminNavUser">Admin User</span>
+        <span class="adminNavUser">{{ session.get('user_name','Admin User') }}</span>
         <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
@@ -36,8 +38,75 @@
   <main class="adminEmployeesPage">
     <div class="adminEmployeesHeader">
       <h1 class="adminEmployeesTitle">Employees</h1>
-      <a href="#" class="adminEmployeesAddBtn"><span class="adminEmployeesAddIcon">＋</span> Add Employee</a>
+      <button type="button" class="adminEmployeesAddBtn" onclick="document.getElementById('addEmpDlg').showModal()">
+        <span class="adminEmployeesAddIcon">＋</span> Add Employee
+      </button>
     </div>
+
+    <!-- Add Employee Modal -->
+    <dialog id="addEmpDlg" class="adminSuppliersDialog">
+      <form method="post" action="{{ url_for('admin_employees_add') }}" class="adminSuppliersForm">
+        <h3 class="adminSuppliersFormTitle">Add Employee</h3>
+
+        <label class="adminSuppliersLabel">Name
+          <input class="adminSuppliersInput" type="text" name="name" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Email
+          <input class="adminSuppliersInput" type="email" name="email" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Password
+          <input class="adminSuppliersInput" type="text" name="password" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Role
+          <select class="adminSuppliersInput" name="role">
+            <option value="employee" selected>Employee</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+
+        <div class="adminSuppliersFormActions">
+          <button type="submit" class="adminSuppliersPrimaryBtn">Save</button>
+          <button type="button" class="adminSuppliersBtn"
+            onclick="document.getElementById('addEmpDlg').close()">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Edit Employee Modal -->
+    <dialog id="editEmpDlg" class="adminSuppliersDialog">
+      <form id="editEmpForm" method="post" class="adminSuppliersForm">
+        <h3 class="adminSuppliersFormTitle">Edit Employee</h3>
+
+        <label class="adminSuppliersLabel">Name
+          <input class="adminSuppliersInput" type="text" name="name" id="editEmpName" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Email
+          <input class="adminSuppliersInput" type="email" name="email" id="editEmpEmail" required>
+        </label>
+
+        <label class="adminSuppliersLabel">Role
+          <select class="adminSuppliersInput" name="role" id="editEmpRole">
+            <option value="employee">Employee</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+
+        <label class="adminSuppliersLabel">New Password (optional)
+          <input class="adminSuppliersInput" type="text" name="password" id="editEmpPassword"
+            placeholder="Leave blank to keep current">
+        </label>
+
+        <div class="adminSuppliersFormActions">
+          <button type="submit" class="adminSuppliersPrimaryBtn">Update</button>
+          <button type="button" class="adminSuppliersBtn"
+            onclick="document.getElementById('editEmpDlg').close()">Cancel</button>
+        </div>
+      </form>
+    </dialog>
 
     <section class="adminEmployeesPanel">
       <div class="adminEmployeesPanelHead">
@@ -56,50 +125,45 @@
             </tr>
           </thead>
           <tbody>
+            {% for e in employees %}
             <tr>
-              <td>EMP001</td>
-              <td>John Doe</td>
-              <td>john@poms.com</td>
-              <td>Employee</td>
+              <td>EMP{{ '%03d' % e.id }}</td>
+              <td>{{ e.name }}</td>
+              <td>{{ e.email }}</td>
+              <td>{{ e.role|title }}</td>
               <td class="adminEmployeesTextRight">
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
+                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit"
+                  onclick="openEditEmp('{{ e.id }}', '{{ e.name|e }}', '{{ e.email|e }}', '{{ e.role|e }}')">✎</button>
+
+                <form method="post" action="{{ url_for('admin_employees_delete', user_id=e.id) }}"
+                  style="display:inline">
+                  <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete"
+                    onclick="return confirm('Delete {{ e.name }}?')">🗑</button>
+                </form>
               </td>
             </tr>
+            {% else %}
             <tr>
-              <td>EMP002</td>
-              <td>Jane Smith</td>
-              <td>jane@poms.com</td>
-              <td>Employee</td>
-              <td class="adminEmployeesTextRight">
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
-              </td>
+              <td colspan="5">No employees found.</td>
             </tr>
-            <tr>
-              <td>EMP003</td>
-              <td>Mike Johnson</td>
-              <td>mike@poms.com</td>
-              <td>Admin</td>
-              <td class="adminEmployeesTextRight">
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
-              </td>
-            </tr>
-            <tr>
-              <td>EMP004</td>
-              <td>Sarah Williams</td>
-              <td>sarah@poms.com</td>
-              <td>Employee</td>
-              <td class="adminEmployeesTextRight">
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnGray" title="Edit">✎</button>
-                <button class="adminEmployeesIconBtn adminEmployeesIconBtnRed" title="Delete">🗑</button>
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </section>
   </main>
+
+  <script>
+    function openEditEmp(id, name, email, role) {
+      const dlg = document.getElementById('editEmpDlg');
+      document.getElementById('editEmpName').value = name;
+      document.getElementById('editEmpEmail').value = email;
+      document.getElementById('editEmpRole').value = role || 'employee';
+      document.getElementById('editEmpPassword').value = '';
+      document.getElementById('editEmpForm').action = `/admin/employees/${id}/edit`;
+      dlg.showModal();
+    }
+  </script>
 </body>
+
 </html>
