@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash, Response
 from sqlalchemy import and_, func
 from models import db, User, Supplier, Order  # Order is available for future pages
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.secret_key = "secret123"  # Needed for session
@@ -341,27 +341,85 @@ def admin_reports_export():
 
 
 # -------------------- EMPLOYEE ROUTES --------------------
+# Employee dashboard with live counts
 @app.route('/employee/dashboard')
 def employee_dashboard():
-    if session.get('role') == 'employee':
-        return render_template('employee/dashboard.html')
-    flash("Unauthorized access")
-    return redirect('/')
+    if session.get('role') != 'employee':
+        flash("Unauthorized access"); return redirect('/')
+    uid = session.get('user_id')
+    total = Order.query.filter_by(employee_id=uid).count()
+    pending = Order.query.filter_by(employee_id=uid, status="Pending").count()
+    approved = Order.query.filter_by(employee_id=uid, status="Approved").count()
+    rejected = Order.query.filter_by(employee_id=uid, status="Rejected").count()
+    return render_template('employee/dashboard.html',
+                           total=total, pending=pending, approved=approved, rejected=rejected)
 
+# My orders list
 @app.route('/employee/myOrders')
 def employee_myorders():
-    if session.get('role') == 'employee':
-        return render_template('employee/myOrders.html')
-    flash("Unauthorized access")
-    return redirect('/')
+    if session.get('role') != 'employee':
+        flash("Unauthorized access"); return redirect('/')
+    uid = session.get('user_id')
+    orders = Order.query.filter_by(employee_id=uid).order_by(Order.id.desc()).all()
+    return render_template('employee/myOrders.html', orders=orders)
 
+# Create order page
 @app.route('/employee/createOrder')
 def employee_createorders():
-    if session.get('role') == 'employee':
-        # If you later want to populate the supplier <select>, pass Supplier.query.all()
-        return render_template('employee/createOrder.html')
-    flash("Unauthorized access")
-    return redirect('/')
+    if session.get('role') != 'employee':
+        flash("Unauthorized access"); return redirect('/')
+    suppliers = Supplier.query.order_by(Supplier.name).all()
+    return render_template('employee/createOrder.html', suppliers=suppliers)
+
+# Handle order submission
+def _next_order_code():
+    last = Order.query.order_by(Order.id.desc()).first()
+    n = (last.id + 1) if last else 1
+    return f"PO-{n:03d}"
+
+@app.route('/employee/createOrder', methods=['POST'])
+def employee_createorders_post():
+    if session.get('role') != 'employee':
+        flash("Unauthorized access"); return redirect('/')
+
+    uid = session.get('user_id')
+    supplier_id = request.form.get('supplier_id')
+    product_name = request.form.get('product_name','').strip()
+    quantity = request.form.get('quantity','0').strip()
+    amount = request.form.get('amount','0').strip()
+    date_str = request.form.get('date','').strip()
+
+    # Basic validation
+    try:
+        quantity = int(quantity or 0)
+    except ValueError:
+        quantity = 0
+    try:
+        amount = float(amount or 0)
+    except ValueError:
+        amount = 0.0
+    try:
+        d = date.fromisoformat(date_str) if date_str else date.today()
+    except ValueError:
+        d = date.today()
+
+    if not supplier_id or not product_name or quantity <= 0:
+        flash("Please fill supplier, product, and a positive quantity.")
+        return redirect('/employee/createOrder')
+
+    code = _next_order_code()
+    order = Order(code=code,
+                  supplier_id=int(supplier_id),
+                  employee_id=uid,
+                  product_name=product_name,
+                  quantity=quantity,
+                  amount=amount,
+                  date=d,
+                  status="Pending")
+    db.session.add(order)
+    db.session.commit()
+    flash(f"Order {code} submitted.")
+    return redirect('/employee/myOrders')
 
 # -------------------- LOGOUT --------------------
 @app.route('/logout')
