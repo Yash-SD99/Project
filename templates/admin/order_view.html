@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ o.code }} — Order Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .ovWrap{max-width:900px;margin:20px auto;padding:0 16px}
+    .ovHead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+    .ovTitle{font-size:24px;font-weight:800;margin:0}
+    .ovMeta{font-size:12px;color:#64748b;text-align:right}
+    .ovCard{background:#fff;border:1px solid var(--adminBorder);border-radius:12px;box-shadow:var(--adminShadow);padding:14px 16px;margin-bottom:12px}
+    .ovGrid{display:grid;grid-template-columns:180px 1fr;gap:10px}
+    .ovLabel{font-size:12px;color:#64748b}
+    .ovValue{font-weight:600}
+    .ovBadge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px}
+    .ovGreen{background:#e7f8ee;color:#22c55e;border:1px solid #d7f2e2}
+    .ovAmber{background:#fff3d9;color:#b7791f;border:1px solid #ffe7b6}
+    .ovRed{background:#ffe4e6;color:#ef4444;border:1px solid #ffc7ce}
+    .ovActions{margin-top:12px}
+    .ovBtn{border:1px solid var(--adminBorder);background:#fff;border-radius:8px;padding:8px 12px;text-decoration:none;margin-right:8px;display:inline-block}
+  </style>
+</head>
+<body>
+  <div class="ovWrap">
+    <div class="ovHead">
+      <h1 class="ovTitle">Purchase Order {{ o.code }}</h1>
+      <div class="ovMeta">
+        Generated: {{ generated_at.strftime('%Y-%m-%d %H:%M') }}<br>
+        Status:
+        <span class="ovBadge {% if o.status=='Approved' %}ovGreen{% elif o.status=='Rejected' %}ovRed{% else %}ovAmber{% endif %}">
+          {{ o.status }}
+        </span>
+      </div>
+    </div>
+
+    <div class="ovCard">
+      <div class="ovGrid">
+        <div class="ovLabel">Supplier</div><div class="ovValue">{{ o.supplier.name if o.supplier else '-' }}</div>
+        <div class="ovLabel">Employee</div><div class="ovValue">{{ o.employee.name if o.employee else '-' }}</div>
+        <div class="ovLabel">Date</div><div class="ovValue">{{ o.date }}</div>
+        <div class="ovLabel">Amount</div><div class="ovValue">${{ '%.2f'|format(o.amount or 0) }}</div>
+      </div>
+    </div>
+
+    <div class="ovCard">
+      <div class="ovGrid">
+        <div class="ovLabel">Product</div><div class="ovValue">{{ o.product_name or '-' }}</div>
+        <div class="ovLabel">Quantity</div><div class="ovValue">{{ o.quantity or 0 }}</div>
+      </div>
+    </div>
+
+    <div class="ovActions">
+      <a class="ovBtn" href="{{ url_for('admin_orders') }}">Back to Orders</a>
+      <a class="ovBtn" href="{{ url_for('admin_reports') }}">Back to Reports</a>
+      <button class="ovBtn" onclick="window.print()">Print</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash, Response
+from flask import Flask, render_template, request, redirect, session, flash, Response, url_for
 from sqlalchemy import and_, func
 from models import db, User, Supplier, Order  # Order is available for future pages
 from datetime import datetime, date
@@ -246,7 +246,6 @@ def admin_employees_delete(user_id):
     flash("Employee deleted.")
     return redirect('/admin/employees')
 
-
 @app.route('/admin/reports')
 def admin_reports():
     if session.get('role') != 'admin':
@@ -255,29 +254,37 @@ def admin_reports():
     # Filters
     status = request.args.get('status', '').strip()
     supplier_id = request.args.get('supplier_id', '').strip()
-    start = request.args.get('start', '').strip()
-    end = request.args.get('end', '').strip()
+    employee_id = request.args.get('employee_id', '').strip()
+    date_str = request.args.get('date', '').strip()
 
     q = Order.query
-
     conds = []
+
     if status:
         conds.append(Order.status == status)
+
     if supplier_id:
         try:
             conds.append(Order.supplier_id == int(supplier_id))
         except ValueError:
             pass
-    # Date range (inclusive)
+
+    if employee_id:
+        try:
+            conds.append(Order.employee_id == int(employee_id))
+        except ValueError:
+            pass
+
+    # Single date filter (equals match)
     def parse_d(s):
         try:
             return datetime.strptime(s, "%Y-%m-%d").date()
         except Exception:
             return None
-    d1 = parse_d(start)
-    d2 = parse_d(end)
-    if d1: conds.append(Order.date >= d1)
-    if d2: conds.append(Order.date <= d2)
+
+    d = parse_d(date_str)
+    if d:
+        conds.append(Order.date == d)
 
     if conds:
         q = q.filter(and_(*conds))
@@ -287,57 +294,26 @@ def admin_reports():
 
     total_amount = sum((o.amount or 0) for o in orders)
     suppliers = Supplier.query.order_by(Supplier.name).all()
+    employees = User.query.filter_by(role='employee').order_by(User.name).all()
 
     return render_template('admin/reports.html',
                            orders=orders,
                            suppliers=suppliers,
+                           employees=employees,
                            status=status,
                            supplier_id=supplier_id,
-                           start=start,
-                           end=end,
+                           employee_id=employee_id,
+                           date=date_str,
                            total_amount=round(total_amount, 2))
 
-@app.route('/admin/reports/export.csv')
-def admin_reports_export():
+# View a single order in a new page (no PDF)
+@app.route('/admin/orders/<int:order_id>/view')
+def admin_order_view(order_id):
     if session.get('role') != 'admin':
         flash("Unauthorized access"); return redirect('/')
 
-    # reuse same filters
-    status = request.args.get('status', '').strip()
-    supplier_id = request.args.get('supplier_id', '').strip()
-    start = request.args.get('start', '').strip()
-    end = request.args.get('end', '').strip()
-
-    from datetime import datetime
-    from sqlalchemy import and_
-    q = Order.query
-    conds = []
-    if status:
-        conds.append(Order.status == status)
-    if supplier_id:
-        try: conds.append(Order.supplier_id == int(supplier_id))
-        except ValueError: pass
-    def parse_d(s):
-        try: return datetime.strptime(s, "%Y-%m-%d").date()
-        except Exception: return None
-    d1 = parse_d(start); d2 = parse_d(end)
-    if d1: conds.append(Order.date >= d1)
-    if d2: conds.append(Order.date <= d2)
-    if conds: q = q.filter(and_(*conds))
-    q = q.order_by(Order.date.desc(), Order.id.desc())
-    rows = q.all()
-
-    # CSV build
-    def generate():
-        yield "Order Code,Supplier,Employee,Date,Amount,Status\n"
-        for o in rows:
-            sup = o.supplier.name if o.supplier else ""
-            emp = o.employee.name if o.employee else ""
-            amt = f"{(o.amount or 0):.2f}"
-            yield f"{o.code},{sup},{emp},{o.date},{amt},{o.status}\n"
-
-    return Response(generate(), mimetype="text/csv",
-                    headers={"Content-Disposition": "attachment; filename=report.csv"})
+    o = Order.query.get_or_404(order_id)
+    return render_template('admin/order_view.html', o=o, generated_at=datetime.now())
 
 
 # -------------------- EMPLOYEE ROUTES --------------------

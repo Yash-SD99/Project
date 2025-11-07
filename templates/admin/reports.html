@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Shared navbar -->
@@ -60,17 +62,21 @@
               {% endfor %}
             </select>
           </label>
-          <label>Start
-            <input type="date" name="start" value="{{ start }}" class="adminSuppliersInput">
+          <label>Employee
+            <select name="employee_id" class="adminSuppliersInput">
+              <option value="" {{ 'selected' if not employee_id }}>All</option>
+              {% for e in employees %}
+              <option value="{{ e.id }}" {{ 'selected' if employee_id|int==e.id }}>{{ e.name }}</option>
+              {% endfor %}
+            </select>
           </label>
-          <label>End
-            <input type="date" name="end" value="{{ end }}" class="adminSuppliersInput">
+          <label>Date
+            <input type="date" name="date" value="{{ date }}" class="adminSuppliersInput">
           </label>
-        </div>
-        <div class="adminSuppliersFormActions" style="margin-top:10px">
-          <button type="submit" class="adminSuppliersPrimaryBtn">Apply</button>
+          <div style=" display: flex; gap: 15px">
+            <button type="submit" class="adminSuppliersPrimaryBtn">Apply</button>
           <a class="adminSuppliersBtn" href="{{ url_for('admin_reports') }}">Reset</a>
-          <a class="adminSuppliersBtn" href="{{ url_for('admin_reports_export', status=status, supplier_id=supplier_id, start=start, end=end) }}">Export CSV</a>
+          </div>
         </div>
       </form>
     </section>
@@ -92,6 +98,7 @@
               <th>Date</th>
               <th>Amount</th>
               <th>Status</th>
+              <th class="adminEmployeesTextRight">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -110,9 +117,15 @@
                   {{ o.status }}
                 </span>
               </td>
+              <td class="adminEmployeesTextRight">
+                <a class="adminOrdersIconBtn" title="View" href="{{ url_for('admin_order_view', order_id=o.id) }}"
+                  target="_blank">↗</a>
+              </td>
             </tr>
             {% else %}
-            <tr><td colspan="6">No data for selected filters.</td></tr>
+            <tr>
+              <td colspan="7">No data for selected filters.</td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>
@@ -120,4 +133,5 @@
     </section>
   </main>
 </body>
+
 </html>
