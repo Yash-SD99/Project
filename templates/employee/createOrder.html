@@ -4,46 +4,44 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orderly — Create Order</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='employee.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Shared navbar -->
-  <header class="adminNavBar">
-    <div class="adminNavInner">
-      <a class="adminNavBrand" href="{{ url_for('employee_dashboard') }}">
-        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
-        <span class="adminNavBrandText">Orderly</span>
+  <header class="empNav">
+    <div class="empNavInner">
+      <a class="empBrand" href="{{ url_for('employee_dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span>Orderly</span>
       </a>
-      <nav class="adminNavLinks">
-        <a class="adminNavLink" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
-        <a class="adminNavLink" href="{{ url_for('employee_myorders') }}">My Orders</a>
-        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('employee_createorders') }}">Create Order</a>
+      <nav class="empLinks">
+        <a href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('employee_myorders') }}">My Orders</a>
+        <a class="active" href="{{ url_for('employee_createorders') }}">Create Order</a>
       </nav>
-      <div class="adminNavRight">
-        <span class="adminNavUser">{{ session.get('user_name','Employee') }}</span>
-        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      <div class="empRight">
+        <span>{{ session.get('user_name','Employee') }}</span>
+        <a class="empBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
   </header>
 
-  <main class="adminSuppliersPage">
-    <div class="adminSuppliersHeader">
-      <h1 class="adminSuppliersTitle">Create Order</h1>
-    </div>
+  <main class="empPage">
+    <h1 style="margin:0 0 12px 0; font-size:22px; font-weight:800;">Create Order</h1>
 
-    <section class="adminSuppliersPanel">
-      <div class="adminSuppliersPanelHead">
-        <h2 class="adminSuppliersPanelTitle">Order Details</h2>
+    <section class="empPanel">
+      <div class="empPanelHead">
+        <h2 class="empTitle">Order Details</h2>
+        <div class="empSub">Fill the fields and submit</div>
       </div>
 
-      <div style="padding:16px;">
-        <form method="post" action="{{ url_for('employee_createorders_post') }}" class="adminSuppliersForm" style="max-width:520px">
-          <label class="adminSuppliersLabel">Supplier
-            <select class="adminSuppliersInput" name="supplier_id" required>
+      <form method="post" action="{{ url_for('employee_createorders_post') }}" class="empForm">
+        <div class="empRow">
+          <label class="empLabel">Supplier
+            <select class="empSelect" name="supplier_id" required>
               <option value="">Select supplier</option>
               {% for s in suppliers %}
               <option value="{{ s.id }}">{{ s.name }}</option>
@@ -51,33 +49,35 @@
             </select>
           </label>
 
-          <label class="adminSuppliersLabel">Product
-            <input class="adminSuppliersInput" type="text" name="product_name" placeholder="e.g., Monitors" required>
+          <label class="empLabel">Product
+            <input class="empInput" type="text" name="product_name" placeholder="e.g., Monitors" required>
           </label>
 
-          <label class="adminSuppliersLabel">Quantity
-            <input class="adminSuppliersInput" type="number" name="quantity" min="1" value="1" required>
+          <label class="empLabel">Quantity
+            <input class="empInput" type="number" name="quantity" min="1" value="1" required>
           </label>
 
-          <label class="adminSuppliersLabel">Amount (optional)
-            <input class="adminSuppliersInput" type="number" step="0.01" name="amount" placeholder="e.g., 399.99">
+          <label class="empLabel">Amount (optional)
+            <input class="empInput" type="number" step="0.01" name="amount" placeholder="e.g., 399.99">
           </label>
+        </div>
 
-          <label class="adminSuppliersLabel">Date
-            <input class="adminSuppliersInput" type="date" name="date" id="orderDate">
+        <div class="empRow empRow--single" style="margin-top:8px;">
+          <label class="empLabel">Date
+            <input class="empInput" type="date" name="date" id="orderDate">
           </label>
+        </div>
 
-          <div class="adminSuppliersFormActions">
-            <button type="submit" class="adminSuppliersPrimaryBtn">Submit</button>
-            <a class="adminSuppliersBtn" href="{{ url_for('employee_myorders') }}">Cancel</a>
-          </div>
-        </form>
-      </div>
+        <div class="empActions">
+          <button type="submit" class="empBtn empBtn--primary">Submit</button>
+          <a class="empBtn" href="{{ url_for('employee_myorders') }}">Cancel</a>
+        </div>
+      </form>
     </section>
   </main>
 
   <script>
-    // Default date to today
+    // Default date to today if empty
     const dateInput = document.getElementById('orderDate');
     if (dateInput && !dateInput.value) {
       dateInput.value = new Date().toISOString().slice(0,10);

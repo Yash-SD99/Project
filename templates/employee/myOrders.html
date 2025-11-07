@@ -4,45 +4,45 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orderly — My Orders</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='employee.css') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Shared navbar -->
-  <header class="adminNavBar">
-    <div class="adminNavInner">
-      <a class="adminNavBrand" href="{{ url_for('employee_dashboard') }}">
-        <img class="adminNavBrandLogo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
-        <span class="adminNavBrandText">Orderly</span>
+  <header class="empNav">
+    <div class="empNavInner">
+      <a class="empBrand" href="{{ url_for('employee_dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span>Orderly</span>
       </a>
-      <nav class="adminNavLinks">
-        <a class="adminNavLink" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
-        <a class="adminNavLink adminNavLinkActive" href="{{ url_for('employee_myorders') }}">My Orders</a>
-        <a class="adminNavLink" href="{{ url_for('employee_createorders') }}">Create Order</a>
+      <nav class="empLinks">
+        <a href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+        <a class="active" href="{{ url_for('employee_myorders') }}">My Orders</a>
+        <a href="{{ url_for('employee_createorders') }}">Create Order</a>
       </nav>
-      <div class="adminNavRight">
-        <span class="adminNavUser">{{ session.get('user_name','Employee') }}</span>
-        <a class="adminNavBtn" href="{{ url_for('logout') }}">Logout</a>
+      <div class="empRight">
+        <span>{{ session.get('user_name','Employee') }}</span>
+        <a class="empBtn" href="{{ url_for('logout') }}">Logout</a>
       </div>
     </div>
   </header>
 
-  <main class="adminSuppliersPage">
-    <div class="adminSuppliersHeader">
-      <h1 class="adminSuppliersTitle">My Orders</h1>
-      <a href="{{ url_for('employee_createorders') }}" class="adminSuppliersAddBtn"><span class="adminSuppliersAddIcon">＋</span> Create Order</a>
+  <main class="empPage">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+      <h1 style="margin:0; font-size:22px; font-weight:800;">My Orders</h1>
+      <a href="{{ url_for('employee_createorders') }}" class="empBtn">＋ Create Order</a>
     </div>
 
-    <section class="adminSuppliersPanel">
-      <div class="adminSuppliersPanelHead">
-        <h2 class="adminSuppliersPanelTitle">Order List</h2>
+    <section class="empPanel">
+      <div class="empPanelHead">
+        <h2 class="empTitle">Order List</h2>
+        <div class="empSub">Your latest orders appear first</div>
       </div>
 
-      <div class="adminSuppliersTableWrap">
-        <table class="adminSuppliersTable">
+      <div class="empTableWrap">
+        <table class="empTable">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -58,16 +58,16 @@
               <td>{{ o.supplier.name if o.supplier else '-' }}</td>
               <td>{{ o.date }}</td>
               <td>
-                <span class="EmployeeMyOrdersBadge
-                  {% if o.status=='Approved' %}EmployeeMyOrdersBadgeGreen
-                  {% elif o.status=='Rejected' %}EmployeeMyOrdersBadgeRed
-                  {% else %}EmployeeMyOrdersBadgeAmber{% endif %}">
+                <span class="badge
+                  {% if o.status=='Approved' %}badge--green
+                  {% elif o.status=='Rejected' %}badge--red
+                  {% else %}badge--amber{% endif %}">
                   {{ o.status }}
                 </span>
               </td>
             </tr>
             {% else %}
-            <tr><td colspan="4">No orders yet.</td></tr>
+            <tr><td colspan="5">No orders yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>
