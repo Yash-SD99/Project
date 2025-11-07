@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <!-- Shared navbar -->
+--> <!-- Shared navbar --><!--
   <header class="adminNavBar">
     <div class="adminNavInner">
       <a class="adminNavBrand" href="{{ url_for('employee_dashboard') }}">
@@ -57,6 +57,71 @@
       <div style="padding:14px;">
         <a class="adminSuppliersPrimaryBtn" href="{{ url_for('employee_createorders') }}">Create New Order</a>
         <a class="adminSuppliersBtn" href="{{ url_for('employee_myorders') }}" style="margin-left:8px;">View My Orders</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html> -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orderly — Employee Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='employee.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="empNav">
+    <div class="empNavInner">
+      <a class="empBrand" href="{{ url_for('employee_dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Orderly logo">
+        <span>Orderly</span>
+      </a>
+      <nav class="empLinks">
+        <a class="active" href="{{ url_for('employee_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('employee_myorders') }}">My Orders</a>
+        <a href="{{ url_for('employee_createorders') }}">Create Order</a>
+      </nav>
+      <div class="empRight">
+        <span>{{ session.get('user_name','Employee') }}</span>
+        <a class="empBtn" href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="empPage">
+    <section class="empKpis" aria-label="Summary">
+      <div class="empCard">
+        <div class="empCardLabel">My Orders</div>
+        <div class="empCardValue">{{ total }}</div>
+      </div>
+      <div class="empCard">
+        <div class="empCardLabel">Pending</div>
+        <div class="empCardValue">{{ pending }}</div>
+      </div>
+      <div class="empCard">
+        <div class="empCardLabel">Approved</div>
+        <div class="empCardValue">{{ approved }}</div>
+      </div>
+      <div class="empCard">
+        <div class="empCardLabel">Rejected</div>
+        <div class="empCardValue">{{ rejected }}</div>
+      </div>
+    </section>
+
+    <section class="empPanel" style="margin-top:18px;">
+      <div class="empPanelHead">
+        <h2 class="empTitle">Quick Actions</h2>
+        <div class="empSub">Create orders faster with one click</div>
+      </div>
+      <div class="empForm">
+        <a class="empBtn empBtn--primary" href="{{ url_for('employee_createorders') }}">Create New Order</a>
+        <a class="empBtn" href="{{ url_for('employee_myorders') }}">View My Orders</a>
       </div>
     </section>
   </main>

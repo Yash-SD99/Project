@@ -1,200 +1,83 @@
-/* =========================================================
-   Employee Shared + Dashboard Styles
-   ========================================================= */
-
 :root{
-  --EmployeeBg:#f7f8fb;
-  --EmployeePanel:#ffffff;
-  --EmployeeText:#0f172a;
-  --EmployeeMuted:#667085;
-  --EmployeeBorder:#e6e9ef;
-  --EmployeePrimary:#3b82f6;
-  --EmployeePrimarySoft:#e6efff;
-  --EmployeeGreen:#22c55e;
-  --EmployeeGreenSoft:#e7f8ee;
-  --EmployeeAmber:#f59e0b;
-  --EmployeeAmberSoft:#fff3d9;
-  --EmployeeRed:#ef4444;
-  --EmployeeRedSoft:#ffe4e6;
-  --EmployeeRadius:12px;
-  --EmployeeShadow: 0 10px 30px rgba(16,24,40,.06), 0 2px 8px rgba(16,24,40,.05);
+  --pageMax:1120px;
+  --gap:14px;
+  --radius:12px;
+  --radiusSm:10px;
+  --shadow:0 6px 18px rgba(16,24,40,.06);
+  --border:#e6eaf0;
+  --muted:#63748a;
+  --text:#0f172a;
+  --brand:#3b82f6;        /* Emerald for employees */
+  --brandHover:#3b83f6c0;
+  --surface:#ffffff;
+  --bg:#f7faf9;
+
+  --green: #22c55e; --greenBg:#e7f8ee; --greenBr:#d7f2e2;
+  --amber:#f59e0b; --amberBg:#fff3d9; --amberBr:#ffe7b6;
+  --red:#ef4444; --redBg:#ffe4e6; --redBr:#ffc7ce;
 }
 
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--EmployeeText);
-  background:var(--EmployeeBg);
-}
+body{background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif}
 
-/* ===== Shared Navbar (EmployeeNav*) ===== */
-.EmployeeNavBar{
-  position:sticky; top:0; z-index:40;
-  background:#ffffffcc; backdrop-filter: blur(8px);
-  border-bottom:1px solid var(--EmployeeBorder);
-}
-.EmployeeNavInner{
-  max-width:1200px; margin:0 auto; padding:10px 16px;
-  display:flex; align-items:center; justify-content:space-between; gap:20px;
-}
-.EmployeeNavBrand{display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit}
-.EmployeeNavBrandLogo{
-  width:28px; height:28px; border-radius:8px; object-fit:cover;
-  background:#e6efff; border:1px solid #d7e5ff;
-}
-.EmployeeNavBrandText{font-weight:700; letter-spacing:.2px}
-.EmployeeNavLinks{display:flex; gap:8px}
-.EmployeeNavLink{
-  padding:8px 12px; border-radius:8px; text-decoration:none; color:#374151; font-weight:600;
-}
-.EmployeeNavLink:hover{background:#f1f5f9}
-.EmployeeNavLinkActive{background:var(--EmployeePrimary); color:#fff}
-.EmployeeNavRight{display:flex; gap:12px; align-items:center}
-.EmployeeNavUser{font-size:14px; color:#475569}
-.EmployeeNavBtn{
-  border:1px solid var(--EmployeeBorder); background:#fff; color:#0f172a;
-  border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer; text-decoration:none;
-}
-.EmployeeNavBtn:hover{background:#f8fafc}
+/* Navbar */
+.empNav{background:#fff; border-bottom:1px solid var(--border)}
+.empNavInner{max-width:var(--pageMax); height:60px; margin:0 auto; padding:0 16px; display:flex; align-items:center; justify-content:space-between}
+.empBrand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text)}
+.empBrand img{height:26px}
+.empBrand span{font-weight:800}
+.empLinks a{padding:8px 10px; border-radius:10px; color:#334155; text-decoration:none}
+.empLinks a:hover{background:#eef6f3}
+.empLinks .active{background:var(--brand); color:#fff}
+.empRight{display:flex; align-items:center; gap:10px}
+.empBtn{border:1px solid var(--border); background:#fff; border-radius:10px; padding:8px 12px; text-decoration:none; color:#334155}
+.empBtn--primary{background:var(--brand); border-color:var(--brand); color:#fff}
+.empBtn--primary:hover{background:var(--brandHover)}
 
-/* ===== Dashboard (EmployeeDashboard*) ===== */
-.EmployeeDashboardPage{max-width:1200px; margin:18px auto; padding:0 16px}
-.EmployeeDashboardTitle{margin:10px 0 18px 0; font-size:28px}
+/* Page Shell */
+.empPage{max-width:var(--pageMax); margin:18px auto; padding:0 16px}
+.empPanel{background:#fff; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+.empPanelHead{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--border)}
+.empTitle{margin:0; font-size:18px; font-weight:800}
+.empSub{font-size:12px; color:var(--muted)}
 
-.EmployeeDashboardCardsRow{
-  display:grid; gap:18px;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
-}
-@media (max-width: 1000px){
-  .EmployeeDashboardCardsRow{grid-template-columns: repeat(2, 1fr);}
-}
-@media (max-width: 640px){
-  .EmployeeDashboardCardsRow{grid-template-columns: 1fr;}
-}
+/* KPIs */
+.empKpis{display:grid; grid-template-columns:repeat(4,minmax(160px,1fr)); gap:var(--gap)}
+.empCard{background:#fff; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 16px}
+.empCardLabel{font-size:12px; color:var(--muted); margin-bottom:6px}
+.empCardValue{font-size:24px; font-weight:800}
 
-.EmployeeDashboardCard{
-  background:var(--EmployeePanel);
-  border:1px solid var(--EmployeeBorder);
-  border-radius:var(--EmployeeRadius);
-  box-shadow:var(--EmployeeShadow);
-  padding:18px;
-}
-.EmployeeDashboardCardHeader{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-}
-.EmployeeDashboardCardTitle{margin:0; font-size:14px; color:var(--EmployeeMuted); font-weight:600}
+/* Forms / Inputs */
+.empForm{padding:16px}
+.empRow{display:grid; grid-template-columns:repeat(2, minmax(200px,1fr)); gap:12px}
+.empRow--single{grid-template-columns:1fr}
+.empLabel{font-size:12px; color:var(--muted); display:flex; flex-direction:column; gap:6px}
+.empInput, .empSelect{height:40px; border:1px solid var(--border); border-radius:10px; padding:0 12px}
+.empInput:focus, .empSelect:focus{outline:2px solid rgba(16,185,129,.25); border-color:var(--brand)}
+.empActions{margin-top:12px; display:flex; gap:10px}
 
-.EmployeeDashboardCardBadge{
-  width:42px; height:42px; border-radius:10px; display:grid; place-items:center;
-  font-size:18px; border:1px solid transparent;
-}
-.EmployeeDashboardBadgeBlue{background:var(--EmployeePrimarySoft); color:var(--EmployeePrimary); border-color:#dbe8ff}
-.EmployeeDashboardBadgeGreen{background:var(--EmployeeGreenSoft); color:var(--EmployeeGreen); border-color:#d7f2e2}
-.EmployeeDashboardBadgeAmber{background:var(--EmployeeAmberSoft); color:#b7791f; border-color:#ffe7b6}
+/* Table */
+.empTableWrap{overflow:auto}
+.empTable{width:100%; border-collapse:separate; border-spacing:0}
+.empTable thead th{background:#f4faf7; font-weight:700; text-align:left; padding:12px 14px; border-bottom:1px solid var(--border)}
+.empTable tbody td{padding:12px 14px; border-bottom:1px solid var(--border)}
+.empTdRight{text-align:right}
 
-.EmployeeDashboardCardValue{
-  margin-top:12px;
-  font-size:32px; font-weight:800; letter-spacing:.3px;
-}
+/* Badges */
+.badge{display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid transparent}
+.badge--green{background:var(--greenBg); color:var(--green); border-color:var(--greenBr)}
+.badge--amber{background:var(--amberBg); color:var(--amber); border-color:var(--amberBr)}
+.badge--red{background:var(--redBg); color:var(--red); border-color:var(--redBr)}
 
+/* Icon button */
+.iconBtn{border:1px solid var(--border); background:#fff; border-radius:10px; padding:6px 10px; font-weight:800; cursor:pointer; text-decoration:none}
+.iconBtn:hover{filter:brightness(.98)}
 
-/* ===== Create Order page (EmployeeCreateOrder*) ===== */
-.EmployeeCreateOrderPage{max-width:1200px; margin:18px auto; padding:0 16px}
-.EmployeeCreateOrderTitle{margin:10px 0 18px 0; font-size:28px}
-
-.EmployeeCreateOrderPanel{
-  background:#fff; border:1px solid var(--EmployeeBorder);
-  border-radius:12px; box-shadow:var(--EmployeeShadow);
-  max-width:720px;
+/* Responsive */
+@media (max-width: 960px){
+  .empKpis{grid-template-columns:repeat(2,minmax(160px,1fr))}
+  .empRow{grid-template-columns:1fr}
 }
-.EmployeeCreateOrderPanelHead{padding:16px 18px;border-bottom:1px solid #eef1f5}
-.EmployeeCreateOrderPanelTitle{margin:0; font-size:18px}
-
-.EmployeeCreateOrderForm{padding:18px; display:grid; gap:14px}
-.EmployeeCreateOrderField{display:grid; gap:6px}
-.EmployeeCreateOrderLabel{font-size:14px; font-weight:600}
-
-.EmployeeCreateOrderInput,
-.EmployeeCreateOrderSelect{
-  width:100%;
-  border:1px solid var(--EmployeeBorder);
-  border-radius:8px;
-  padding:12px 14px;
-  font-size:15px;
-  outline:none;
-  transition:border-color .15s, box-shadow .15s;
-  background:#fff; color:var(--EmployeeText);
+@media (max-width: 600px){
+  .empKpis{grid-template-columns:1fr}
 }
-.EmployeeCreateOrderInput:focus,
-.EmployeeCreateOrderSelect:focus{
-  border-color:var(--EmployeePrimary);
-  box-shadow:0 0 0 4px var(--EmployeePrimarySoft);
-}
-
-/* Select with custom arrow */
-.EmployeeCreateOrderSelectWrap{position:relative}
-.EmployeeCreateOrderSelect{appearance:none; -webkit-appearance:none; -moz-appearance:none; padding-right:36px}
-.EmployeeCreateOrderSelectIcon{
-  position:absolute; right:12px; top:50%; transform:translateY(-50%);
-  color:#64748b; pointer-events:none;
-}
-
-/* Two-column row */
-.EmployeeCreateOrderGrid{
-  display:grid; gap:14px; grid-template-columns: 1fr 1fr;
-}
-@media (max-width: 640px){
-  .EmployeeCreateOrderGrid{grid-template-columns:1fr}
-}
-
-/* Total */
-.EmployeeCreateOrderTotal{
-  display:flex; align-items:center; justify-content:space-between;
-  border:1px solid var(--EmployeeBorder);
-  background:#f6f8fe; border-radius:10px; padding:14px;
-}
-.EmployeeCreateOrderTotalLabel{font-weight:700}
-.EmployeeCreateOrderTotalValue{font-weight:800; color:#1d4ed8}
-
-/* Submit */
-.EmployeeCreateOrderSubmit{
-  width:100%;
-  border:1px solid #306fe0;
-  background:var(--EmployeePrimary); color:#fff;
-  border-radius:10px; padding:12px 16px;
-  font-weight:700; cursor:pointer;
-}
-.EmployeeCreateOrderSubmit:hover{background:#2f6fe5}
-
-/* ===== My Orders (EmployeeMyOrders*) ===== */
-.EmployeeMyOrdersPage{max-width:1200px;margin:18px auto;padding:0 16px}
-.EmployeeMyOrdersTitle{margin:10px 0 18px 0;font-size:28px}
-
-.EmployeeMyOrdersPanel{
-  background:#fff; border:1px solid var(--EmployeeBorder);
-  border-radius:12px; box-shadow:var(--EmployeeShadow);
-}
-.EmployeeMyOrdersPanelHead{padding:16px 18px;border-bottom:1px solid #eef1f5}
-.EmployeeMyOrdersPanelTitle{margin:0; font-size:18px}
-
-.EmployeeMyOrdersTableWrap{overflow:auto}
-.EmployeeMyOrdersTable{
-  width:100%; border-collapse:separate; border-spacing:0; font-size:14px;
-}
-.EmployeeMyOrdersTable thead th{
-  text-align:left; font-weight:700; color:#475569; padding:14px 18px; background:#fff;
-  position:sticky; top:0; z-index:1; border-bottom:1px solid #eef1f5;
-}
-.EmployeeMyOrdersTable tbody td{
-  padding:16px 18px; border-top:1px solid #f0f2f6; background:#fff;
-}
-.EmployeeMyOrdersTable tbody tr:nth-child(odd) td{background:#fbfcff}
-
-/* Status badges */
-.EmployeeMyOrdersBadge{
-  display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px; border:1px solid transparent;
-}
-.EmployeeMyOrdersBadgeGreen{background:#e7f8ee;color:#22c55e;border-color:#d7f2e2}
-.EmployeeMyOrdersBadgeAmber{background:#fff3d9;color:#b7791f;border-color:#ffe7b6}
-.EmployeeMyOrdersBadgeRed{background:#ffe4e6;color:#ef4444;border-color:#ffc7ce}
